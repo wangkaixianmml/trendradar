@@ -13,9 +13,16 @@ Deploy in <strong>30 seconds</strong> — Say goodbye to endless scrolling, only
 [![GitHub Stars](https://img.shields.io/github/stars/sansan0/TrendRadar?style=flat-square&logo=github&color=yellow)](https://github.com/sansan0/TrendRadar/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/sansan0/TrendRadar?style=flat-square&logo=github&color=blue)](https://github.com/sansan0/TrendRadar/network/members)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg?style=flat-square)](LICENSE)
+<<<<<<< HEAD
 [![Version](https://img.shields.io/badge/version-v5.0.0-blue.svg)](https://github.com/sansan0/TrendRadar)
 [![MCP](https://img.shields.io/badge/MCP-v3.1.5-green.svg)](https://github.com/sansan0/TrendRadar)
 [![RSS](https://img.shields.io/badge/RSS-Feed_Support-orange.svg?style=flat-square&logo=rss&logoColor=white)](https://github.com/sansan0/TrendRadar)
+=======
+[![Version](https://img.shields.io/badge/version-v5.2.0-blue.svg)](https://github.com/sansan0/TrendRadar)
+[![MCP](https://img.shields.io/badge/MCP-v3.1.6-green.svg)](https://github.com/sansan0/TrendRadar)
+[![RSS](https://img.shields.io/badge/RSS-Feed_Support-orange.svg?style=flat-square&logo=rss&logoColor=white)](https://github.com/sansan0/TrendRadar)
+[![AI Translation](https://img.shields.io/badge/AI-Multi--Language-purple.svg?style=flat-square)](https://github.com/sansan0/TrendRadar)
+>>>>>>> upstream/master
 
 [![WeWork](https://img.shields.io/badge/WeWork-Notification-00D4AA?style=flat-square)](https://work.weixin.qq.com/)
 [![WeChat](https://img.shields.io/badge/WeChat-Notification-00D4AA?style=flat-square)](https://weixin.qq.com/)
@@ -56,8 +63,13 @@ Deploy in <strong>30 seconds</strong> — Say goodbye to endless scrolling, only
 |   |   |   |
 |:---:|:---:|:---:|
 | [🚀 **Quick Start**](#-quick-start) | [AI Analysis](#-ai-analysis) | [⚙️ **Configuration Guide**](#configuration-guide) |
+<<<<<<< HEAD
 | [Docker Deployment](#6-docker-deployment) | [MCP Clients](#-mcp-clients) | [Related Projects](#-related-projects) |
 | | [❓ **FAQ & Support**](#-faq--support) | |
+=======
+| [Docker Deployment](#6-docker-deployment) | [MCP Clients](#-mcp-clients) | [📝 **Changelog**](#-changelog) |
+| [🎯 **Core Features**](#-core-features) | [☕ **Support Project**](#-support-project) | [📚 **Related Projects**](#-related-projects) |
+>>>>>>> upstream/master
 
 </div>
 
@@ -102,7 +114,11 @@ After communication, the author indicated no concerns about server pressure, but
 > Thanks to **financial supporters**. Your generosity has transformed into snacks and drinks beside my keyboard, accompanying every iteration of this project
 >
 > **Return of "One-Yuan Appreciation"**:
+<<<<<<< HEAD
 > With the release of v5.0.0, the project enters a new phase. To support growing API costs and caffeine consumption, the "One-Yuan Appreciation" channel is now reopened. Every bit of your kindness translates into Tokens and motivation in the code world. 🚀 [Support Now](#-faq--support)
+=======
+> With the release of v5.0.0, the project enters a new phase. To support growing API costs and caffeine consumption, the "One-Yuan Appreciation" channel is now reopened. Every bit of your kindness translates into Tokens and motivation in the code world. 🚀 [Support Now](#-support-project)
+>>>>>>> upstream/master
 
 | Supporter | Amount (CNY) | Date | Note |
 | :-------: | :----------: | :--: | :--: |
@@ -148,11 +164,84 @@ After communication, the author indicated no concerns about server pressure, but
 
 <br>
 
+<<<<<<< HEAD
+=======
+## ☕ Support Project
+
+> If this project is helpful to you, you can choose the following ways to support:
+> 1. **Public Welfare**: Search for **Tencent Charity** on WeChat and donate to **Education Support** related projects as you wish.
+>
+> 2. **Sponsor the Developer**: Your sponsorship will be used to replenish caffeine for the carbon-based organism and Token consumption for the silicon-based organism.
+
+
+- **GitHub Issues**: Suitable for targeted answers. Please provide complete info when asking (screenshots, error logs, system environment, etc.).
+- **Official Account**: Suitable for quick consultation. Suggest priority to communicate in public comment area of related articles. If private message, please use polite language 😉
+- **Contact**: path@linux.do
+
+
+| Official Account | WeChat Appreciation | Alipay Appreciation |
+|:---:|:---:|:---:|
+| <img src="_image/weixin.png" width="300" title="Silicon Tea Room"/> | <img src="https://cdn-1258574687.cos.ap-shanghai.myqcloud.com/img/%2F2025%2F07%2F17%2F2ae0a88d98079f7e876c2b4dc85233c6-9e8025.JPG" width="300" title="WeChat Pay"/> | <img src="https://cdn-1258574687.cos.ap-shanghai.myqcloud.com/img/%2F2025%2F07%2F17%2F1ed4f20ab8e35be51f8e84c94e6e239b4-fe4947.JPG" width="300" title="Alipay"/> |
+
+<br>
+
+>>>>>>> upstream/master
 ## 📝 Changelog
 
 >**📌 Check Latest Updates**: **[Original Repository Changelog](https://github.com/sansan0/TrendRadar?tab=readme-ov-file#-changelog)**:
 - **Tip**: Check [Changelog] to understand specific [Features]
 
+<<<<<<< HEAD
+=======
+### 2026/01/17 - v5.2.0
+
+> See config.yaml for details
+
+**🌐 AI Translation**
+
+- **Multi-language Translation**: Translate push content to any language
+- **Batch Translation**: Smart batch processing to reduce API calls
+- **Custom Prompts**: Customize translation style
+
+**🔧 Configuration Optimization**
+
+- **Standalone AI Model Config**: Analysis and translation share model config
+- **Unified Region Switches**: Unified management of push region display
+- **Custom Region Order**: Customize display order of each region
+
+**✨ AI Analysis Enhancement**
+
+- **AI Analysis Embedded in HTML**: Analysis results directly embedded in HTML reports, used by email notifications
+- **Rich Style AI Section**: Gradient blue card layout, clearly separating analysis dimensions
+- **Ranking Timeline Support**: AI can access precise ranking at each crawl time point
+- **Section Reorganization (7→4)**: Consolidated into Core Trends, Sentiment & Controversy, Signals & Anomalies, Outlook & Strategy
+
+**🔧 Multi-Model Adaptation**
+
+- **Universal Parameter Passthrough**: Pass any advanced parameters to API
+- **Gemini Adaptation**: Native parameter support with relaxed safety settings
+
+**🐛 Bug Fixes**
+
+- Fixed various known issues, improved system stability
+
+
+### 2026/01/10 - mcp-v3.0.0~v3.1.5
+
+- **Breaking Change**: All tool return values unified to `{success, summary, data, error}` structure
+- **Async Consistency**: All 21 tool functions wrapped with `asyncio.to_thread()` for sync calls
+- **MCP Resources**: Added 4 resources (platforms, rss-feeds, available-dates, keywords)
+- **RSS Enhancement**: `get_latest_rss` supports multi-day queries (days param), cross-date URL deduplication
+- **Regex Matching Fix**: `get_trending_topics` supports `/pattern/` regex syntax and `display_name`
+- **Cache Optimization**: Added `make_cache_key()` function with param sorting + MD5 hash for consistency
+- **New check_version Tool**: Check TrendRadar and MCP Server version updates simultaneously
+
+
+<details>
+<summary>👉 Click to expand: <strong>Historical Updates</strong></summary>
+
+
+>>>>>>> upstream/master
 ### 2026/01/10 - v5.0.0
 
 > **Dev Anecdote**:
@@ -177,6 +266,7 @@ This update refactors the push message structure into five distinct core section
 - **Custom Prompts**: Customize AI analysis role and output format via `config/ai_analysis_prompt.txt`
 - **Multi-dimensional Analysis**: AI can analyze ranking changes, trending duration, cross-platform performance, trend prediction
 
+<<<<<<< HEAD
 ### 2026/01/10 - mcp-v3.0.0~v3.1.5
 
 - **Breaking Change**: All tool return values unified to `{success, summary, data, error}` structure
@@ -191,6 +281,8 @@ This update refactors the push message structure into five distinct core section
 <details>
 <summary>👉 Click to expand: <strong>Historical Updates</strong></summary>
 
+=======
+>>>>>>> upstream/master
 
 ### 2026/01/02 - v4.7.0
 
@@ -258,7 +350,11 @@ This update refactors the push message structure into five distinct core section
 
 **🎉 Major Update: Comprehensive Refactoring of Storage and Core Architecture**
 
+<<<<<<< HEAD
 - **Multi-Storage Backend Support**: Introduced a brand new storage module supporting local SQLite and remote cloud storage (S3-compatible protocols, Cloudflare R2 recommended for free tier), adaptable to GitHub Actions, Docker, and local environments.
+=======
+- **Multi-Storage Backend Support**: Introduced a brand new storage module supporting local SQLite and remote cloud storage (S3-compatible protocols, e.g., Cloudflare R2), adaptable to GitHub Actions, Docker, and local environments.
+>>>>>>> upstream/master
 - **Database Structure Optimization**: Refactored SQLite database table structures to improve data efficiency and query performance.
 - **Enhanced Features**: Implemented date format standardization, data retention policies, timezone configuration support, and optimized time display. Fixed remote storage data persistence issues to ensure accurate data merging.
 - **Cleanup and Compatibility**: Removed most legacy compatibility code and unified data storage and retrieval methods.
@@ -822,6 +918,34 @@ Supports **WeWork** (+ WeChat push solution), **Feishu**, **DingTalk**, **Telegr
 
 > 💡 For detailed configuration, see [Configuration Guide - Multi-Account Push Configuration](#10-multiple-account-push-configuration)
 
+<<<<<<< HEAD
+=======
+### **AI Multi-Language Translation** (v5.2.0 New)
+
+Translate push content into any language, breaking language barriers — whether reading domestic trends or subscribing to international news via RSS, access everything in your native language
+
+- **One-Click Translation**: Set `ai_translation.enabled: true` and target language in `config.yaml`
+- **Multi-Language Support**: Supports English, Korean, Japanese, French, and any other language
+- **Smart Batch Processing**: Automatically batches translations to reduce API calls and save costs
+- **Custom Style**: Customize translation style and terminology via `ai_translation_prompt.txt`
+- **Shared Model Config**: Shares the `ai` config section with AI analysis feature
+
+```yaml
+# config.yaml quick enable example
+ai_translation:
+  enabled: true
+  language: "English"  # Target translation language
+```
+
+> 💡 Translation shares model config with AI analysis — just configure `ai.api_key` once to use both features
+
+**RSS Source References**: Here are some RSS feed collections for your reference
+- [awesome-tech-rss](https://github.com/tuan3w/awesome-tech-rss) - Tech, startup, and programming blogs & media
+- [awesome-rss-feeds](https://github.com/plenaryapp/awesome-rss-feeds) - Mainstream news media RSS from countries worldwide
+
+> ⚠️ Some international media content may involve sensitive topics that AI models might refuse to translate. Please filter subscription sources based on your actual needs
+
+>>>>>>> upstream/master
 ### **Flexible Storage Architecture (v4.0.0 Major Update)**
 
 **Multi-Backend Support**:
@@ -846,7 +970,11 @@ Use AI models to deeply analyze push content, automatically generate trending in
 - **Flexible Push**: Choose original content only, AI analysis only, or both
 - **Custom Prompts**: Customize analysis perspective via `config/ai_analysis_prompt.txt`
 
+<<<<<<< HEAD
 > 💡 Detailed configuration tutorial: [AI Analysis Configuration](#12-ai-analysis-configuration)
+=======
+> 💡 Detailed configuration tutorial: [Let AI help me analyze hot topics](#12-let-ai-help-me-analyze-hot-topics)
+>>>>>>> upstream/master
 
 ### **Independent Display Section (v5.0.0 New)**
 
@@ -868,6 +996,7 @@ AI conversational analysis system based on MCP (Model Context Protocol), enablin
 >
 > See [AI Analysis](#-ai-analysis) for details
 
+<<<<<<< HEAD
 ### **Zero Technical Barrier Deployment**
 
 One-click GitHub Fork to use, no programming required.
@@ -877,6 +1006,17 @@ One-click GitHub Fork to use, no programming required.
 > 1-minute deployment: WeWork (mobile notification)
 
 **💡 Tip:** Want a **real-time updated** web version? After forking, go to your repo Settings → Pages and enable GitHub Pages. [Preview Effect](https://sansan0.github.io/TrendRadar/).
+=======
+### **Web Deployment**
+
+After running, the `index.html` generated in the root directory is the complete news report page.
+
+> **Deployment**: Click **Use this template** to create your repository, then deploy to Cloudflare Pages or GitHub Pages.
+>
+> **💡 Tip**: Enable GitHub Pages for an online URL. Go to Settings → Pages to enable. [Preview Effect](https://sansan0.github.io/TrendRadar/)
+>
+> ⚠️ The GitHub Actions auto-storage feature has been discontinued (this approach caused excessive load on GitHub servers, affecting platform stability).
+>>>>>>> upstream/master
 
 ### **Reduce APP Dependencies**
 
@@ -887,9 +1027,15 @@ Transform from "algorithm recommendation captivity" to "actively getting the inf
 **Typical Scenarios:** Stock investment monitoring, brand sentiment tracking, industry trend watching, lifestyle news gathering
 
 
+<<<<<<< HEAD
 | Github Pages Effect (Mobile Adapted, Email Push) | Feishu Push Effect |
 |:---:|:---:|
 | ![Github Pages Effect](_image/github-pages.png) | ![Feishu Push Effect](_image/feishu.jpg) |
+=======
+| Web Effect (Email Push) | Feishu Push Effect | AI Analysis Push Effect |
+|:---:|:---:|:---:|
+| ![Web Effect](_image/github-pages.png) | ![Feishu Push Effect](_image/feishu.jpg) | ![AI Analysis Push Effect](_image/ai.jpg) |
+>>>>>>> upstream/master
 
 
 <br>
@@ -910,7 +1056,11 @@ Transform from "algorithm recommendation captivity" to "actively getting the inf
 #### 🅱️ Option B: GitHub Actions Deployment (This Chapter ⬇️)
 
 * **Features**: Data is stored in **Remote Cloud Storage** (no longer written to Git repo)
+<<<<<<< HEAD
 * **Recommended**: Configure cloud storage service (Cloudflare R2 free tier is sufficient, Alibaba Cloud OSS, Tencent Cloud COS, etc.)
+=======
+* **Storage**: Configure cloud storage service (e.g. Cloudflare R2, Alibaba Cloud OSS, Tencent Cloud COS, etc.)
+>>>>>>> upstream/master
 * **Note**: Requires periodic check-in renewal (every 7 days)
 
 ### 1️⃣ Step 1: Get project code
@@ -997,9 +1147,17 @@ Transform from "algorithm recommendation captivity" to "actively getting the inf
 </details>
 
 <details>
+<<<<<<< HEAD
 <summary> <strong>👉 Click to expand: Feishu Bot</strong> (Most user-friendly message display)</summary>
 <br>
 
+=======
+<summary> <strong>👉 Click to expand: Feishu Bot</strong> (Message display is relatively friendly)</summary>
+<br>
+
+**Note**: If **AI Analysis** is enabled, Feishu push notifications may occasionally (approx. 5% probability) experience a few minutes of delay. This is likely due to the platform's internal compliance auditing for AI-generated content.
+
+>>>>>>> upstream/master
 **GitHub Secret Configuration (⚠️ Name must match exactly):**
 - **Name**: `FEISHU_WEBHOOK_URL` (Please copy and paste this name, do not type manually)
 - **Secret (Value)**: Your Feishu bot Webhook address (link starts with https://www.feishu.cn/flow/api/trigger-webhook/********)
@@ -1736,7 +1894,11 @@ Templates support two placeholders:
    - Need quick answers to problems?
    - Have great ideas to share?
 
+<<<<<<< HEAD
    👉 Follow the WeChat Official Account「**[硅基茶水间](#-faq--support)**」, your likes and comments are the motivation for continuous updates.
+=======
+   👉 Follow the WeChat Official Account「**[Silicon Tea Room](#-support-project)**」, your likes and comments are the motivation for continuous updates.
+>>>>>>> upstream/master
 
    <br>
 
@@ -1775,6 +1937,7 @@ For specific additions, visit [project source code](https://github.com/ourongxin
 
 ```yaml
 platforms:
+<<<<<<< HEAD
   - id: "toutiao"
     name: "Toutiao"
   - id: "baidu"
@@ -1782,6 +1945,17 @@ platforms:
   - id: "wallstreetcn-hot"
     name: "Wallstreetcn"
   # Add more platforms...
+=======
+  enabled: true                       # Enable trending platform crawling
+  sources:
+    - id: "toutiao"
+      name: "Toutiao"
+    - id: "baidu"
+      name: "Baidu Hot Search"
+    - id: "wallstreetcn-hot"
+      name: "Wallstreetcn"
+    # Add more platforms...
+>>>>>>> upstream/master
 ```
 
 > 💡 **Shortcut**: If you don't know how to read source code, you can copy from others' organized [Platform Configuration Summary](https://github.com/sansan0/TrendRadar/issues/95)
@@ -2179,10 +2353,17 @@ BYD
 
 </details>
 
+<<<<<<< HEAD
 ### 3. Push Mode Details
 
 <details>
 <summary>👉 Click to expand: <strong>Three Push Modes Detailed Comparison</strong></summary>
+=======
+### 3. Which push mode should I choose?
+
+<details>
+<summary>👉 Click to expand: <strong>Detailed Comparison of 3 Modes</strong></summary>
+>>>>>>> upstream/master
 <br>
 
 **Configuration Location:** `report.mode` in `config/config.yaml`
@@ -2192,8 +2373,11 @@ report:
   mode: "daily"  # Options: "daily" | "incremental" | "current"
 ```
 
+<<<<<<< HEAD
 **Docker Environment Variable:** `REPORT_MODE=incremental`
 
+=======
+>>>>>>> upstream/master
 #### Detailed Comparison Table
 
 | Mode | Target Users | Push Timing | Display Content | Typical Use Case |
@@ -2241,10 +2425,17 @@ Assume you monitor "Apple" keyword, execute once per hour:
 
 </details>
 
+<<<<<<< HEAD
 ### 4. Advanced Configuration - Hotspot Weight Adjustment
 
 <details>
 <summary>👉 Click to expand: <strong>Hotspot Weight Adjustment</strong></summary>
+=======
+### 4. How to adjust hotness algorithm?
+
+<details>
+<summary>👉 Click to expand: <strong>Customize Hotspot Weights</strong></summary>
+>>>>>>> upstream/master
 <br>
 
 **Configuration Location:** `advanced.weight` section in `config/config.yaml`
@@ -2290,10 +2481,17 @@ Core idea: Users pursuing speed and timeliness increase ranking weight, users pu
 
 </details>
 
+<<<<<<< HEAD
 ### 5. Push Format Reference
 
 <details>
 <summary>👉 Click to expand: <strong>Push Format Explanation</strong></summary>
+=======
+### 5. What will the messages look like?
+
+<details>
+<summary>👉 Click to expand: <strong>Message Style Preview</strong></summary>
+>>>>>>> upstream/master
 <br>
 
 #### Push Example
@@ -2422,16 +2620,24 @@ current directory/
 
    | Environment Variable | Corresponding Config | Example Value | Description |
    |---------------------|---------------------|---------------|-------------|
+<<<<<<< HEAD
    | `ENABLE_CRAWLER` | `advanced.crawler.enabled` | `true` / `false` | Enable crawler |
    | `ENABLE_NOTIFICATION` | `notification.enabled` | `true` / `false` | Enable notification |
    | `REPORT_MODE` | `report.mode` | `daily` / `incremental` / `current`| Report mode |
    | `DISPLAY_MODE` | `report.display_mode` | `keyword` / `platform` | Display mode |
+=======
+>>>>>>> upstream/master
    | `ENABLE_WEBSERVER` | - | `true` / `false` | Auto-start web server |
    | `WEBSERVER_PORT` | - | `8080` | Web server port |
    | `FEISHU_WEBHOOK_URL` | `notification.channels.feishu.webhook_url` | `https://...` | Feishu Webhook (multi-account use `;` separator) |
    | `AI_ANALYSIS_ENABLED` | `ai_analysis.enabled` | `true` / `false` | Enable AI analysis (v5.0.0 new) |
+<<<<<<< HEAD
    | `AI_API_KEY` | `ai_analysis.api_key` | `sk-xxx...` | AI API Key (v5.0.0 new) |
    | `AI_PROVIDER` | `ai_analysis.provider` | `deepseek` / `openai` / `gemini` | AI provider (v5.0.0 new) |
+=======
+   | `AI_API_KEY` | `ai.api_key` | `sk-xxx...` | AI API Key (shared by ai_analysis and ai_translation) |
+   | `AI_PROVIDER` | `ai.provider` | `deepseek` / `openai` / `gemini` | AI provider (v5.0.0 new) |
+>>>>>>> upstream/master
    | `S3_*` | `storage.remote.*` | - | Remote storage config (5 params) |
 
    **Config Priority**: Environment Variables > config.yaml
@@ -2757,6 +2963,7 @@ After MCP service starts, configure based on your client:
 
 </details>
 
+<<<<<<< HEAD
 ### 7. Report Configuration
 
 <details>
@@ -2764,6 +2971,15 @@ After MCP service starts, configure based on your client:
 <br>
 
 **Configuration Location:** `report` section in `config/config.yaml`
+=======
+### 7. How is the push content displayed?
+
+<details>
+<summary>👉 Click to expand: <strong>Customize Push Style and Content</strong></summary>
+<br>
+
+**Configuration Location:** `report` and `display` sections in `config/config.yaml`
+>>>>>>> upstream/master
 
 ```yaml
 report:
@@ -2772,7 +2988,18 @@ report:
   rank_threshold: 5                # Ranking highlight threshold
   sort_by_position_first: false    # Sorting priority
   max_news_per_keyword: 0          # Maximum display count per keyword
+<<<<<<< HEAD
   reverse_content_order: false     # Content order configuration
+=======
+
+display:
+  region_order:                    # Region display order (v5.2.0 new)
+    - new_items                    # New trending section
+    - hotlist                      # Hotlist section
+    - rss                          # RSS subscription section
+    - standalone                   # Independent display section
+    - ai_analysis                  # AI analysis section
+>>>>>>> upstream/master
 ```
 
 #### Configuration Details
@@ -2784,7 +3011,11 @@ report:
 | `rank_threshold` | int | `5` | Ranking highlight threshold, news with rank ≤ this value will be displayed in bold |
 | `sort_by_position_first` | bool | `false` | Sorting priority: `false`=sort by news count, `true`=sort by config position |
 | `max_news_per_keyword` | int | `0` | Maximum display count per keyword, `0`=unlimited |
+<<<<<<< HEAD
 | `reverse_content_order` | bool | `false` | Content order: `false`=trending keywords stats first, `true`=new trending news first |
+=======
+| `display.region_order` | list | See config above | Adjust list order to control region display positions |
+>>>>>>> upstream/master
 
 #### Display Mode Configuration (v4.6.0 New)
 
@@ -2811,6 +3042,7 @@ Controls how news is grouped in push messages and HTML reports:
   2. [Trump] Trump announces major policy #2 - 09:15 (3 times)
 ```
 
+<<<<<<< HEAD
 **Docker Environment Variable:**
 ```bash
 DISPLAY_MODE=platform
@@ -2833,6 +3065,29 @@ Controls display order of two content sections in push messages and HTML reports
 ```bash
 REVERSE_CONTENT_ORDER=true
 ```
+=======
+#### Region Display Order (region_order)
+
+Control the display position of each section in push messages by adjusting the order of `display.region_order` list.
+
+**Default Order**: New Items → Hotlist → RSS → Standalone → AI Analysis
+
+**Custom Example**: Want AI analysis at the top?
+
+```yaml
+display:
+  region_order:
+    - ai_analysis                  # Move to first line
+    - new_items
+    - hotlist
+    - rss
+    - standalone
+```
+
+**Note**: A region will only be displayed when both conditions are met:
+1. Listed in `region_order`
+2. Corresponding switch in `display.regions` is `true`
+>>>>>>> upstream/master
 
 #### Sorting Priority Configuration
 
@@ -2853,12 +3108,23 @@ MAX_NEWS_PER_KEYWORD=10
 
 Provides full trending list display for specified platforms, unaffected by `frequency_words.txt` keyword filtering.
 
+<<<<<<< HEAD
 **Configuration Location:** `notification.standalone_display` section in `config/config.yaml`
 
 ```yaml
 notification:
   standalone_display:
     enabled: false                    # Enable or not
+=======
+**Configuration Location:** `display` section in `config/config.yaml`
+
+```yaml
+display:
+  regions:
+    standalone: true                  # Enable independent display section
+
+  standalone:
+>>>>>>> upstream/master
     platforms: ["zhihu", "weibo"]     # Trending platform ID list
     rss_feeds: ["hacker-news"]        # RSS feed ID list
     max_items: 20                     # Max display count per source (0=unlimited)
@@ -2884,10 +3150,17 @@ Hacker News (5 items):
 
 </details>
 
+<<<<<<< HEAD
 ### 8. Push Window Configuration
 
 <details>
 <summary>👉 Click to expand: <strong>Push Time Window Control Details</strong></summary>
+=======
+### 8. When will I receive pushes?
+
+<details>
+<summary>👉 Click to expand: <strong>Set Push Time Window</strong></summary>
+>>>>>>> upstream/master
 <br>
 
 **Configuration Location:** `notification.push_window` section in `config/config.yaml`
@@ -2960,10 +3233,17 @@ notification:
 
 </details>
 
+<<<<<<< HEAD
 ### 9. Execution Frequency Configuration
 
 <details>
 <summary>👉 Click to expand: <strong>Automatic Execution Frequency Settings</strong></summary>
+=======
+### 9. How often does it run?
+
+<details>
+<summary>👉 Click to expand: <strong>Set Auto-Run Frequency</strong></summary>
+>>>>>>> upstream/master
 <br>
 
 **Configuration Location:** `schedule` section in `.github/workflows/crawler.yml`
@@ -2974,6 +3254,7 @@ on:
     - cron: "0 * * * *"  # Run every hour
 ```
 
+<<<<<<< HEAD
 #### What is a Cron Expression?
 
 Cron is a time-based job scheduler format, consisting of 5 parts: `minute hour day month weekday`
@@ -3023,10 +3304,50 @@ Cron is a time-based job scheduler format, consisting of 5 parts: `minute hour d
 
 <details>
 <summary>👉 Click to expand: <strong>Multiple Account Push Configuration Guide</strong></summary>
+=======
+#### How to change the schedule?
+
+GitHub Actions uses a time format called "Cron". You don't need to understand it deeply; just copy and replace the code below.
+
+**Configuration Location**: `schedule` section in `.github/workflows/crawler.yml`
+
+| I want... | Copy this line | Note |
+|-----------|----------------|------|
+| **Every Hour** | `- cron: "0 * * * *"` | **Default**, runs at minute 0 |
+| **Every 30 Mins** | `- cron: "*/30 * * * *"` | Runs every 30 minutes |
+| **Daily at 8 AM** | `- cron: "0 0 * * *"` | ⚠️ `0` because UTC 0:00 = Beijing 8:00 AM |
+| **Work Hours (30m)** | `- cron: "*/30 0-14 * * *"` | Beijing 8:00 - 22:00 |
+| **3 Times Daily** | `- cron: "0 0,6,12 * * *"` | Beijing 8:00, 14:00, 20:00 |
+
+#### ⚠️ Two Important Notes
+
+1. **Time Zone**: GitHub servers use **UTC time**.
+   - **Math**: Your desired Beijing time **minus 8 hours** = value to fill.
+   - *Example: For Beijing 20:00, fill in 12:00.*
+
+2. **Don't run too often**: Suggest intervals no shorter than 30 minutes.
+   - GitHub free resources are limited; running too frequently might get flagged.
+   - Actions have startup delays, so precise timing isn't guaranteed anyway.
+
+#### Step-by-Step Guide
+
+1. In your GitHub repository, find `.github/workflows/crawler.yml`.
+2. Click the ✏️ (Edit) button top right.
+3. Find the line `cron: "..."` and replace the content inside quotes with the code above.
+4. Click the green **Commit changes** button to save.
+
+</details>
+
+### 10. Push to multiple groups/devices
+
+<details>
+<summary>👉 Click to expand: <strong>Send to Multiple Recipients</strong></summary>
+>>>>>>> upstream/master
 <br>
 
 **Configuration Location:** `notification` section in `config/config.yaml`
 
+<<<<<<< HEAD
 > ### ⚠️ **Security Warning**
 > **GitHub Fork Users: DO NOT configure push information in `config.yaml`!**
 >
@@ -3586,6 +3907,173 @@ AI_API_KEY=sk-your-api-key
 AI_PROVIDER=deepseek
 AI_MODEL=deepseek-chat
 ```
+=======
+> ### ⚠️ **Security First**
+> **DO NOT write passwords/Tokens directly in `config.yaml`!**
+> If you upload a file containing passwords to GitHub, the whole world can see it.
+>
+> **Correct Method**:
+> - **GitHub Actions Users**: Add in Settings -> Secrets
+> - **Docker Users**: Write in `.env` file (this file won't be uploaded)
+
+#### How to push to multiple places?
+
+Simple, just separate multiple addresses with a semicolon `;`.
+
+**Example**:
+Suppose you have two Feishu groups:
+- Group 1: `https://.../webhook/aaa`
+- Group 2: `https://.../webhook/bbb`
+
+Config value:
+`https://.../webhook/aaa;https://.../webhook/bbb`
+
+#### Supported Platforms
+
+| Platform | Method | Note |
+|----------|--------|------|
+| **Feishu/DingTalk/WeWork** | Separate URLs with `;` | Just chain them up |
+| **Bark (iOS)** | Separate URLs with `;` | Push to multiple iPhones |
+| **Telegram** | Separate Tokens and ChatIDs with `;` | ⚠️ **Order must match**: <br>Token1 ↔ ChatID1<br>Token2 ↔ ChatID2 |
+| **ntfy** | Separate Topics and Tokens with `;` | If a topic needs no token, leave empty:<br>`token1;;token3` (middle is empty) |
+
+#### Common Config Examples (GitHub Secrets / .env)
+
+```bash
+# Send to 3 Feishu groups
+FEISHU_WEBHOOK_URL=https://hook1...;https://hook2...;https://hook3...
+
+# Send to 2 DingTalk groups
+DINGTALK_WEBHOOK_URL=https://oapi...;https://oapi...
+
+# Send to 2 Telegram users (Match one-to-one)
+TELEGRAM_BOT_TOKEN=tokenA;tokenB
+TELEGRAM_CHAT_ID=userA;userB
+```
+
+> **Tip**: Default limit is 3 accounts per platform to prevent abuse. Adjust `MAX_ACCOUNTS_PER_CHANNEL` if needed.
+
+</details>
+
+<br>
+
+### 11. Where is the data saved?
+
+<details id="storage-config">
+<summary>👉 Click to expand: <strong>Choose Data Storage Location</strong></summary>
+<br>
+
+#### Where is the data saved?
+
+The system automatically selects the best location for you, so you usually don't need to worry about it:
+
+| Your Environment | Data Location | Description |
+|------------------|---------------|-------------|
+| **Docker / Local** | **Local Disk** | Saved in the `output/` folder within the project directory. |
+| **GitHub Actions** | **Cloud Storage** | Since GitHub Actions environments are destroyed after running, cloud storage (e.g., Cloudflare R2) is required. |
+
+#### How to configure cloud storage? (For GitHub Actions Users)
+
+If you run on GitHub Actions, you need a "cloud drive" to save data. For example, Cloudflare R2 (free tier is generous).
+
+**Add these 5 variables to GitHub Secrets:**
+
+| Variable Name | Value |
+|---------------|-------|
+| `STORAGE_BACKEND` | `remote` |
+| `S3_BUCKET_NAME` | Your bucket name |
+| `S3_ACCESS_KEY_ID` | Your Access Key |
+| `S3_SECRET_ACCESS_KEY` | Your Secret Key |
+| `S3_ENDPOINT_URL` | Your R2 endpoint URL |
+
+> 💡 **Tutorial**: How to apply for R2? See [Quick Start - Remote Storage Configuration](#-quick-start)
+
+#### How long is data kept?
+
+By default, we never delete your data. If you want to save space, you can enable "Auto Cleanup".
+
+**Config Location**: `config/config.yaml`
+
+```yaml
+storage:
+  local:
+    retention_days: 30    # Keep local data for 30 days (0 = forever)
+  remote:
+    retention_days: 30    # Keep cloud data for 30 days
+```
+
+#### Push time is wrong? (Timezone Settings)
+
+If you are overseas or find the push time doesn't match your local time, you can change the timezone.
+
+**Config Location**: `config/config.yaml`
+
+```yaml
+app:
+  timezone: "Asia/Shanghai"  # Default is China Standard Time
+```
+- Example for Los Angeles: `America/Los_Angeles`
+- Example for London: `Europe/London`
+
+</details>
+
+### 12. Let AI help me analyze hot topics
+
+<details id="ai-analysis-config">
+<summary>👉 Click to expand: <strong>Enable AI Smart Analysis</strong></summary>
+
+#### What can AI do for me?
+
+After enabling this feature, AI acts as a professional analyst. When pushing a batch of news, it will:
+1. **Auto-Read**: Read all matched trending news.
+2. **Deep Think**: Analyze connections between seemingly isolated news items.
+3. **Write Report**: Append a concise and profound "Insight Report" at the end of the push message.
+
+**Includes**: Trending topic summary, public opinion direction, cross-platform correlation, potential impact assessment, etc.
+
+#### How to enable AI Analysis?
+
+The simplest way is via environment variables (Recommended for GitHub Secrets or .env).
+
+**Required Configurations**:
+
+| Variable Name | Value | Description |
+|--------------|-------|-------------|
+| `AI_ANALYSIS_ENABLED` | `true` | Enable switch |
+| `AI_API_KEY` | `sk-xxxxxx` | Your API Key |
+| `AI_PROVIDER` | `deepseek` | AI Provider (see table below) |
+| `AI_MODEL` | `deepseek-chat` | Model Name |
+
+**Supported AI Providers**:
+
+| Provider | AI_PROVIDER Value | Default Model (AI_MODEL) |
+|----------|-------------------|------------------------|
+| **DeepSeek** (Recommended) | `deepseek` | `deepseek-chat` |
+| **OpenAI** | `openai` | `gpt-4o` |
+| **Google Gemini** | `gemini` | `gemini-1.5-flash` |
+| **Custom** (OneAPI) | `custom` | Requires `AI_BASE_URL` |
+
+> 💡 **Tip**: DeepSeek offers excellent performance/price ratio, highly suitable for high-frequency news analysis.
+
+#### Advanced: AI Translation
+
+If you subscribe to foreign RSS feeds (like Hacker News), AI can translate the content into your native language.
+
+**Configuration Location**: `config/config.yaml`
+
+```yaml
+ai_translation:
+  enabled: true          # Enable translation
+  language: "Chinese"    # Target language (Chinese, English, Japanese...)
+```
+
+#### Advanced: Customize AI "Persona"
+
+Think the AI sounds too official? You can modify its prompt to change its style (e.g., "Sarcastic Commentator", "Senior Investment Advisor").
+
+- **File**: `config/ai_analysis_prompt.txt`
+- **Method**: Edit with a text editor, tell AI what analysis style you want.
+>>>>>>> upstream/master
 
 </details>
 
@@ -3623,7 +4111,11 @@ AI analysis **does not** query real-time online data directly, but analyzes **lo
 
 Cherry Studio provides GUI config interface, 5-minute quick deployment, complex parts are one-click install.
 
+<<<<<<< HEAD
 **Illustrated Deployment Tutorial**: Now updated to my WeChat Official Account (see [FAQ & Support](#-faq--support)), reply "mcp" to get
+=======
+**Illustrated Deployment Tutorial**: Now updated to my WeChat Official Account (see [Support Project](#-support-project)), reply "mcp" to get
+>>>>>>> upstream/master
 
 **Detailed Deployment Tutorial**: [README-Cherry-Studio.md](README-Cherry-Studio.md)
 
@@ -3639,7 +4131,11 @@ Cherry Studio provides GUI config interface, 5-minute quick deployment, complex 
 
 > 💡 **Tip**: Actually not recommended to ask multiple questions at once. If your chosen AI model cannot even sequentially call as shown below, suggest switching models.
 
+<<<<<<< HEAD
 <img src="/_image/ai2.png" alt="MCP usage effect" width="600">
+=======
+<img src="/_image/ai4.png" alt="MCP usage effect" width="600">
+>>>>>>> upstream/master
 
 <br>
 
@@ -3950,6 +4446,7 @@ Any client supporting Model Context Protocol can connect to TrendRadar:
 
 <br>
 
+<<<<<<< HEAD
 ## ☕ FAQ & Support
 
 > If this project is helpful to you, you can choose the following ways to support:
@@ -3969,6 +4466,8 @@ Any client supporting Model Context Protocol can connect to TrendRadar:
 
 <br>
 
+=======
+>>>>>>> upstream/master
 ## 📚 Related Projects
 
 > **4 Related Articles** (Chinese):

@@ -27,6 +27,12 @@ class NewsItem:
     first_time: str = ""                # 首次出现时间
     last_time: str = ""                 # 最后出现时间
     count: int = 1                      # 出现次数
+<<<<<<< HEAD
+=======
+    rank_timeline: List[Dict[str, Any]] = field(default_factory=list)  # 完整排名时间线
+                                        # 格式: [{"time": "09:30", "rank": 1}, {"time": "10:00", "rank": 2}, ...]
+                                        # None 表示脱榜: [{"time": "11:00", "rank": None}]
+>>>>>>> upstream/master
 
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典"""
@@ -42,6 +48,10 @@ class NewsItem:
             "first_time": self.first_time,
             "last_time": self.last_time,
             "count": self.count,
+<<<<<<< HEAD
+=======
+            "rank_timeline": self.rank_timeline,
+>>>>>>> upstream/master
         }
 
     @classmethod
@@ -59,6 +69,10 @@ class NewsItem:
             first_time=data.get("first_time", ""),
             last_time=data.get("last_time", ""),
             count=data.get("count", 1),
+<<<<<<< HEAD
+=======
+            rank_timeline=data.get("rank_timeline", []),
+>>>>>>> upstream/master
         )
 
 

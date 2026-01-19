@@ -29,15 +29,25 @@ except ImportError:
     ClientError = Exception
 
 from trendradar.storage.base import StorageBackend, NewsItem, NewsData, RSSItem, RSSData
+<<<<<<< HEAD
+=======
+from trendradar.storage.sqlite_mixin import SQLiteStorageMixin
+>>>>>>> upstream/master
 from trendradar.utils.time import (
     get_configured_time,
     format_date_folder,
     format_time_filename,
 )
+<<<<<<< HEAD
 from trendradar.utils.url import normalize_url
 
 
 class RemoteStorageBackend(StorageBackend):
+=======
+
+
+class RemoteStorageBackend(SQLiteStorageMixin, StorageBackend):
+>>>>>>> upstream/master
     """
     远程云存储后端（S3 兼容协议）
 
@@ -128,6 +138,13 @@ class RemoteStorageBackend(StorageBackend):
     def supports_txt(self) -> bool:
         return self.enable_txt
 
+<<<<<<< HEAD
+=======
+    # ========================================
+    # SQLiteStorageMixin 抽象方法实现
+    # ========================================
+
+>>>>>>> upstream/master
     def _get_configured_time(self) -> datetime:
         """获取配置时区的当前时间"""
         return get_configured_time(self.timezone)
@@ -323,6 +340,7 @@ class RemoteStorageBackend(StorageBackend):
 
         return self._db_connections[db_path]
 
+<<<<<<< HEAD
     def _get_schema_path(self, db_type: str = "news") -> Path:
         """
         获取 schema.sql 文件路径
@@ -555,10 +573,61 @@ class RemoteStorageBackend(StorageBackend):
 
         except Exception as e:
             print(f"[远程存储] 保存失败: {e}")
+=======
+    # ========================================
+    # StorageBackend 接口实现（委托给 mixin + 上传）
+    # ========================================
+
+    def save_news_data(self, data: NewsData) -> bool:
+        """
+        保存新闻数据到远程存储
+
+        流程：下载现有数据库 → 插入/更新数据 → 上传回远程存储
+        """
+        # 查询已有记录数
+        conn = self._get_connection(data.date)
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) as count FROM news_items")
+        row = cursor.fetchone()
+        existing_count = row[0] if row else 0
+        if existing_count > 0:
+            print(f"[远程存储] 已有 {existing_count} 条历史记录，将合并新数据")
+
+        # 使用 mixin 的实现保存数据
+        success, new_count, updated_count, title_changed_count, off_list_count = \
+            self._save_news_data_impl(data, "[远程存储]")
+
+        if not success:
+            return False
+
+        # 查询合并后的总记录数
+        cursor.execute("SELECT COUNT(*) as count FROM news_items")
+        row = cursor.fetchone()
+        final_count = row[0] if row else 0
+
+        # 输出详细的存储统计日志
+        log_parts = [f"[远程存储] 处理完成：新增 {new_count} 条"]
+        if updated_count > 0:
+            log_parts.append(f"更新 {updated_count} 条")
+        if title_changed_count > 0:
+            log_parts.append(f"标题变更 {title_changed_count} 条")
+        if off_list_count > 0:
+            log_parts.append(f"脱榜 {off_list_count} 条")
+        log_parts.append(f"(去重后总计: {final_count} 条)")
+        print("，".join(log_parts))
+
+        # 上传到远程存储
+        if self._upload_sqlite(data.date):
+            print(f"[远程存储] 数据已同步到远程存储")
+            return True
+        else:
+            print(f"[远程存储] 上传远程存储失败")
+>>>>>>> upstream/master
             return False
 
     def get_today_all_data(self, date: Optional[str] = None) -> Optional[NewsData]:
         """获取指定日期的所有新闻数据（合并后）"""
+<<<<<<< HEAD
         try:
             conn = self._get_connection(date)
             cursor = conn.cursor()
@@ -792,6 +861,88 @@ class RemoteStorageBackend(StorageBackend):
         except Exception as e:
             print(f"[远程存储] 检测新标题失败: {e}")
             return {}
+=======
+        return self._get_today_all_data_impl(date)
+
+    def get_latest_crawl_data(self, date: Optional[str] = None) -> Optional[NewsData]:
+        """获取最新一次抓取的数据"""
+        return self._get_latest_crawl_data_impl(date)
+
+    def detect_new_titles(self, current_data: NewsData) -> Dict[str, Dict]:
+        """检测新增的标题"""
+        return self._detect_new_titles_impl(current_data)
+
+    def is_first_crawl_today(self, date: Optional[str] = None) -> bool:
+        """检查是否是当天第一次抓取"""
+        return self._is_first_crawl_today_impl(date)
+
+    def has_pushed_today(self, date: Optional[str] = None) -> bool:
+        """检查指定日期是否已推送过"""
+        return self._has_pushed_today_impl(date)
+
+    def record_push(self, report_type: str, date: Optional[str] = None) -> bool:
+        """记录推送"""
+        success = self._record_push_impl(report_type, date)
+
+        if success:
+            now_str = self._get_configured_time().strftime("%Y-%m-%d %H:%M:%S")
+            print(f"[远程存储] 推送记录已保存: {report_type} at {now_str}")
+
+            # 上传到远程存储 确保记录持久化
+            if self._upload_sqlite(date):
+                print(f"[远程存储] 推送记录已同步到远程存储")
+                return True
+            else:
+                print(f"[远程存储] 推送记录同步到远程存储失败")
+                return False
+
+        return False
+
+    # ========================================
+    # RSS 数据存储方法
+    # ========================================
+
+    def save_rss_data(self, data: RSSData) -> bool:
+        """
+        保存 RSS 数据到远程存储
+
+        流程：下载现有数据库 → 插入/更新数据 → 上传回远程存储
+        """
+        success, new_count, updated_count = self._save_rss_data_impl(data, "[远程存储]")
+
+        if not success:
+            return False
+
+        # 输出统计日志
+        log_parts = [f"[远程存储] RSS 处理完成：新增 {new_count} 条"]
+        if updated_count > 0:
+            log_parts.append(f"更新 {updated_count} 条")
+        print("，".join(log_parts))
+
+        # 上传到远程存储
+        if self._upload_sqlite(data.date, db_type="rss"):
+            print(f"[远程存储] RSS 数据已同步到远程存储")
+            return True
+        else:
+            print(f"[远程存储] RSS 上传远程存储失败")
+            return False
+
+    def get_rss_data(self, date: Optional[str] = None) -> Optional[RSSData]:
+        """获取指定日期的所有 RSS 数据"""
+        return self._get_rss_data_impl(date)
+
+    def detect_new_rss_items(self, current_data: RSSData) -> Dict[str, List[RSSItem]]:
+        """检测新增的 RSS 条目"""
+        return self._detect_new_rss_items_impl(current_data)
+
+    def get_latest_rss_data(self, date: Optional[str] = None) -> Optional[RSSData]:
+        """获取最新一次抓取的 RSS 数据"""
+        return self._get_latest_rss_data_impl(date)
+
+    # ========================================
+    # 远程特有功能：TXT/HTML 快照（临时目录）
+    # ========================================
+>>>>>>> upstream/master
 
     def save_txt_snapshot(self, data: NewsData) -> Optional[str]:
         """保存 TXT 快照（远程存储模式下默认不支持）"""
@@ -861,6 +1012,7 @@ class RemoteStorageBackend(StorageBackend):
             print(f"[远程存储] 保存 HTML 报告失败: {e}")
             return None
 
+<<<<<<< HEAD
     def is_first_crawl_today(self, date: Optional[str] = None) -> bool:
         """检查是否是当天第一次抓取"""
         try:
@@ -879,6 +1031,11 @@ class RemoteStorageBackend(StorageBackend):
         except Exception as e:
             print(f"[远程存储] 检查首次抓取失败: {e}")
             return True
+=======
+    # ========================================
+    # 远程特有功能：资源清理
+    # ========================================
+>>>>>>> upstream/master
 
     def cleanup(self) -> None:
         """清理资源（关闭连接和删除临时文件）"""
@@ -946,16 +1103,24 @@ class RemoteStorageBackend(StorageBackend):
                 for obj in page['Contents']:
                     key = obj['Key']
 
+<<<<<<< HEAD
                     # 解析日期（格式: news/YYYY-MM-DD.db 或 news/YYYY年MM月DD日.db）
                     folder_date = None
                     try:
                         # ISO 格式: news/YYYY-MM-DD.db
+=======
+                    # 解析日期（格式: news/YYYY-MM-DD.db）
+                    folder_date = None
+                    date_str = None
+                    try:
+>>>>>>> upstream/master
                         date_match = re.match(r'news/(\d{4})-(\d{2})-(\d{2})\.db$', key)
                         if date_match:
                             folder_date = datetime(
                                 int(date_match.group(1)),
                                 int(date_match.group(2)),
                                 int(date_match.group(3)),
+<<<<<<< HEAD
                                 tzinfo=pytz.timezone("Asia/Shanghai")
                             )
                             date_str = f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}"
@@ -970,6 +1135,11 @@ class RemoteStorageBackend(StorageBackend):
                                     tzinfo=pytz.timezone("Asia/Shanghai")
                                 )
                                 date_str = f"{date_match.group(1)}年{date_match.group(2)}月{date_match.group(3)}日"
+=======
+                                tzinfo=pytz.timezone(self.timezone)
+                            )
+                            date_str = f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}"
+>>>>>>> upstream/master
                     except Exception:
                         continue
 
@@ -1003,6 +1173,7 @@ class RemoteStorageBackend(StorageBackend):
             print(f"[远程存储] 清理过期数据失败: {e}")
             return deleted_count
 
+<<<<<<< HEAD
     def has_pushed_today(self, date: Optional[str] = None) -> bool:
         """
         检查指定日期是否已推送过
@@ -1457,6 +1628,8 @@ class RemoteStorageBackend(StorageBackend):
             print(f"[远程存储] 获取最新 RSS 数据失败: {e}")
             return None
 
+=======
+>>>>>>> upstream/master
     def __del__(self):
         """析构函数"""
         # 检查 Python 是否正在关闭
@@ -1468,6 +1641,13 @@ class RemoteStorageBackend(StorageBackend):
             # Python 关闭时可能会出错，忽略即可
             pass
 
+<<<<<<< HEAD
+=======
+    # ========================================
+    # 远程特有功能：数据拉取和列表
+    # ========================================
+
+>>>>>>> upstream/master
     def pull_recent_days(self, days: int, local_data_dir: str = "output") -> int:
         """
         从远程拉取最近 N 天的数据到本地

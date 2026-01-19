@@ -1,138 +1,59 @@
 # coding=utf-8
 """
-本地存储后端 - SQLite + TXT/HTML
+SQLite 存储 Mixin
 
-使用 SQLite 作为主存储，支持可选的 TXT 快照和 HTML 报告
+提供共用的 SQLite 数据库操作逻辑，供 LocalStorageBackend 和 RemoteStorageBackend 复用。
 """
 
 import sqlite3
-import shutil
-import pytz
-import re
-from datetime import datetime, timedelta
+from abc import abstractmethod
+from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-from trendradar.storage.base import StorageBackend, NewsItem, NewsData, RSSItem, RSSData
-<<<<<<< HEAD
-=======
-from trendradar.storage.sqlite_mixin import SQLiteStorageMixin
->>>>>>> upstream/master
-from trendradar.utils.time import (
-    get_configured_time,
-    format_date_folder,
-    format_time_filename,
-)
-<<<<<<< HEAD
+from trendradar.storage.base import NewsItem, NewsData, RSSItem, RSSData
 from trendradar.utils.url import normalize_url
 
 
-class LocalStorageBackend(StorageBackend):
-=======
-
-
-class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
->>>>>>> upstream/master
+class SQLiteStorageMixin:
     """
-    本地存储后端
+    SQLite 存储操作 Mixin
 
-    使用 SQLite 数据库存储新闻数据，支持：
-    - 按日期组织的 SQLite 数据库文件
-    - 可选的 TXT 快照（用于调试）
-    - HTML 报告生成
+    子类需要实现以下抽象方法：
+    - _get_connection(date, db_type) -> sqlite3.Connection
+    - _get_configured_time() -> datetime
+    - _format_date_folder(date) -> str
+    - _format_time_filename() -> str
     """
 
-    def __init__(
-        self,
-        data_dir: str = "output",
-        enable_txt: bool = True,
-        enable_html: bool = True,
-        timezone: str = "Asia/Shanghai",
-    ):
-        """
-        初始化本地存储后端
-
-        Args:
-            data_dir: 数据目录路径
-            enable_txt: 是否启用 TXT 快照
-            enable_html: 是否启用 HTML 报告
-            timezone: 时区配置（默认 Asia/Shanghai）
-        """
-        self.data_dir = Path(data_dir)
-        self.enable_txt = enable_txt
-        self.enable_html = enable_html
-        self.timezone = timezone
-        self._db_connections: Dict[str, sqlite3.Connection] = {}
-
-    @property
-    def backend_name(self) -> str:
-        return "local"
-
-    @property
-    def supports_txt(self) -> bool:
-        return self.enable_txt
-
-<<<<<<< HEAD
-=======
     # ========================================
-    # SQLiteStorageMixin 抽象方法实现
+    # 抽象方法 - 子类必须实现
     # ========================================
 
->>>>>>> upstream/master
+    @abstractmethod
+    def _get_connection(self, date: Optional[str] = None, db_type: str = "news") -> sqlite3.Connection:
+        """获取数据库连接"""
+        pass
+
+    @abstractmethod
     def _get_configured_time(self) -> datetime:
         """获取配置时区的当前时间"""
-        return get_configured_time(self.timezone)
+        pass
 
+    @abstractmethod
     def _format_date_folder(self, date: Optional[str] = None) -> str:
         """格式化日期文件夹名 (ISO 格式: YYYY-MM-DD)"""
-        return format_date_folder(date, self.timezone)
+        pass
 
+    @abstractmethod
     def _format_time_filename(self) -> str:
         """格式化时间文件名 (格式: HH-MM)"""
-        return format_time_filename(self.timezone)
+        pass
 
-    def _get_db_path(self, date: Optional[str] = None, db_type: str = "news") -> Path:
-        """
-        获取 SQLite 数据库路径
+    # ========================================
+    # Schema 管理
+    # ========================================
 
-        新结构（扁平）：output/{type}/{date}.db
-        - output/news/2025-12-28.db
-        - output/rss/2025-12-28.db
-
-        Args:
-            date: 日期字符串
-            db_type: 数据库类型 ("news" 或 "rss")
-
-        Returns:
-            数据库文件路径
-        """
-        date_str = self._format_date_folder(date)
-        db_dir = self.data_dir / db_type
-        db_dir.mkdir(parents=True, exist_ok=True)
-        return db_dir / f"{date_str}.db"
-
-    def _get_connection(self, date: Optional[str] = None, db_type: str = "news") -> sqlite3.Connection:
-        """
-        获取数据库连接（带缓存）
-
-        Args:
-            date: 日期字符串
-            db_type: 数据库类型 ("news" 或 "rss")
-
-        Returns:
-            数据库连接
-        """
-        db_path = str(self._get_db_path(date, db_type))
-
-        if db_path not in self._db_connections:
-            conn = sqlite3.connect(db_path)
-            conn.row_factory = sqlite3.Row
-            self._init_tables(conn, db_type)
-            self._db_connections[db_path] = conn
-
-        return self._db_connections[db_path]
-
-<<<<<<< HEAD
     def _get_schema_path(self, db_type: str = "news") -> Path:
         """
         获取 schema.sql 文件路径
@@ -166,15 +87,20 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
 
         conn.commit()
 
-    def save_news_data(self, data: NewsData) -> bool:
+    # ========================================
+    # 新闻数据存储
+    # ========================================
+
+    def _save_news_data_impl(self, data: NewsData, log_prefix: str = "[存储]") -> tuple[bool, int, int, int, int]:
         """
-        保存新闻数据到 SQLite（以 URL 为唯一标识，支持标题更新检测）
+        保存新闻数据到 SQLite（核心实现）
 
         Args:
             data: 新闻数据
+            log_prefix: 日志前缀
 
         Returns:
-            是否保存成功
+            (success, new_count, updated_count, title_changed_count, off_list_count)
         """
         try:
             conn = self._get_connection(data.date)
@@ -289,9 +215,55 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
                             new_count += 1
 
                     except sqlite3.Error as e:
-                        print(f"保存新闻条目失败 [{item.title[:30]}...]: {e}")
+                        print(f"{log_prefix} 保存新闻条目失败 [{item.title[:30]}...]: {e}")
 
             total_items = new_count + updated_count
+
+            # ========================================
+            # 脱榜检测：检测上次在榜但这次不在榜的新闻
+            # ========================================
+            off_list_count = 0
+
+            # 获取上一次抓取时间
+            cursor.execute("""
+                SELECT crawl_time FROM crawl_records
+                WHERE crawl_time < ?
+                ORDER BY crawl_time DESC
+                LIMIT 1
+            """, (data.crawl_time,))
+            prev_record = cursor.fetchone()
+
+            if prev_record:
+                prev_crawl_time = prev_record[0]
+
+                # 对于每个成功抓取的平台，检测脱榜
+                for source_id in success_sources:
+                    # 获取当前抓取中该平台的所有标准化 URL
+                    current_urls = set()
+                    for item in data.items.get(source_id, []):
+                        normalized_url = normalize_url(item.url, source_id) if item.url else ""
+                        if normalized_url:
+                            current_urls.add(normalized_url)
+
+                    # 查询上次在榜（last_crawl_time = prev_crawl_time）但这次不在榜的新闻
+                    # 这些新闻是"第一次脱榜"，需要记录
+                    cursor.execute("""
+                        SELECT id, url FROM news_items
+                        WHERE platform_id = ?
+                          AND last_crawl_time = ?
+                          AND url != ''
+                    """, (source_id, prev_crawl_time))
+
+                    for row in cursor.fetchall():
+                        news_id, url = row[0], row[1]
+                        if url not in current_urls:
+                            # 插入脱榜记录（rank=0 表示脱榜）
+                            cursor.execute("""
+                                INSERT INTO rank_history
+                                (news_item_id, rank, crawl_time, created_at)
+                                VALUES (?, 0, ?, ?)
+                            """, (news_id, data.crawl_time, now_str))
+                            off_list_count += 1
 
             # 记录抓取信息
             cursor.execute("""
@@ -332,39 +304,13 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
 
             conn.commit()
 
-=======
-    # ========================================
-    # StorageBackend 接口实现（委托给 mixin）
-    # ========================================
-
-    def save_news_data(self, data: NewsData) -> bool:
-        """保存新闻数据到 SQLite"""
-        db_path = self._get_db_path(data.date)
-        if not db_path.exists():
-            # 确保目录存在
-            db_path.parent.mkdir(parents=True, exist_ok=True)
-
-        success, new_count, updated_count, title_changed_count, off_list_count = \
-            self._save_news_data_impl(data, "[本地存储]")
-
-        if success:
->>>>>>> upstream/master
-            # 输出详细的存储统计日志
-            log_parts = [f"[本地存储] 处理完成：新增 {new_count} 条"]
-            if updated_count > 0:
-                log_parts.append(f"更新 {updated_count} 条")
-            if title_changed_count > 0:
-                log_parts.append(f"标题变更 {title_changed_count} 条")
-<<<<<<< HEAD
-            print("，".join(log_parts))
-
-            return True
+            return True, new_count, updated_count, title_changed_count, off_list_count
 
         except Exception as e:
-            print(f"[本地存储] 保存失败: {e}")
-            return False
+            print(f"{log_prefix} 保存失败: {e}")
+            return False, 0, 0, 0, 0
 
-    def get_today_all_data(self, date: Optional[str] = None) -> Optional[NewsData]:
+    def _get_today_all_data_impl(self, date: Optional[str] = None) -> Optional[NewsData]:
         """
         获取指定日期的所有新闻数据（合并后）
 
@@ -375,10 +321,6 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             合并后的新闻数据
         """
         try:
-            db_path = self._get_db_path(date)
-            if not db_path.exists():
-                return None
-
             conn = self._get_connection(date)
             cursor = conn.cursor()
 
@@ -399,21 +341,39 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             # 收集所有 news_item_id
             news_ids = [row[0] for row in rows]
 
-            # 批量查询排名历史
+            # 批量查询排名历史（同时获取时间和排名）
+            # 过滤逻辑：只保留 last_crawl_time 之前的脱榜记录（rank=0）
+            # 这样可以避免显示新闻永久脱榜后的无意义记录
             rank_history_map: Dict[int, List[int]] = {}
+            rank_timeline_map: Dict[int, List[Dict[str, Any]]] = {}
             if news_ids:
                 placeholders = ",".join("?" * len(news_ids))
                 cursor.execute(f"""
-                    SELECT news_item_id, rank FROM rank_history
-                    WHERE news_item_id IN ({placeholders})
-                    ORDER BY news_item_id, crawl_time
+                    SELECT rh.news_item_id, rh.rank, rh.crawl_time
+                    FROM rank_history rh
+                    JOIN news_items ni ON rh.news_item_id = ni.id
+                    WHERE rh.news_item_id IN ({placeholders})
+                      AND NOT (rh.rank = 0 AND rh.crawl_time > ni.last_crawl_time)
+                    ORDER BY rh.news_item_id, rh.crawl_time
                 """, news_ids)
                 for rh_row in cursor.fetchall():
-                    news_id, rank = rh_row[0], rh_row[1]
+                    news_id, rank, crawl_time = rh_row[0], rh_row[1], rh_row[2]
+
+                    # 构建 ranks 列表（去重，排除脱榜记录 rank=0）
                     if news_id not in rank_history_map:
                         rank_history_map[news_id] = []
-                    if rank not in rank_history_map[news_id]:
+                    if rank != 0 and rank not in rank_history_map[news_id]:
                         rank_history_map[news_id].append(rank)
+
+                    # 构建 rank_timeline 列表（完整时间线，包含脱榜）
+                    if news_id not in rank_timeline_map:
+                        rank_timeline_map[news_id] = []
+                    # 提取时间部分（HH:MM）
+                    time_part = crawl_time.split()[1][:5] if ' ' in crawl_time else crawl_time[:5]
+                    rank_timeline_map[news_id].append({
+                        "time": time_part,
+                        "rank": rank if rank != 0 else None  # 0 转为 None 表示脱榜
+                    })
 
             # 按 platform_id 分组
             items: Dict[str, List[NewsItem]] = {}
@@ -433,6 +393,7 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
 
                 # 获取排名历史，如果没有则使用当前排名
                 ranks = rank_history_map.get(news_id, [row[4]])
+                rank_timeline = rank_timeline_map.get(news_id, [])
 
                 items[platform_id].append(NewsItem(
                     title=title,
@@ -446,6 +407,7 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
                     first_time=row[7],  # first_crawl_time
                     last_time=row[8],   # last_crawl_time
                     count=row[9],       # crawl_count
+                    rank_timeline=rank_timeline,
                 ))
 
             final_items = items
@@ -478,10 +440,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             )
 
         except Exception as e:
-            print(f"[本地存储] 读取数据失败: {e}")
+            print(f"[存储] 读取数据失败: {e}")
             return None
 
-    def get_latest_crawl_data(self, date: Optional[str] = None) -> Optional[NewsData]:
+    def _get_latest_crawl_data_impl(self, date: Optional[str] = None) -> Optional[NewsData]:
         """
         获取最新一次抓取的数据
 
@@ -492,10 +454,6 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             最新抓取的新闻数据
         """
         try:
-            db_path = self._get_db_path(date)
-            if not db_path.exists():
-                return None
-
             conn = self._get_connection(date)
             cursor = conn.cursor()
 
@@ -529,21 +487,39 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             # 收集所有 news_item_id
             news_ids = [row[0] for row in rows]
 
-            # 批量查询排名历史
+            # 批量查询排名历史（同时获取时间和排名）
+            # 过滤逻辑：只保留 last_crawl_time 之前的脱榜记录（rank=0）
+            # 这样可以避免显示新闻永久脱榜后的无意义记录
             rank_history_map: Dict[int, List[int]] = {}
+            rank_timeline_map: Dict[int, List[Dict[str, Any]]] = {}
             if news_ids:
                 placeholders = ",".join("?" * len(news_ids))
                 cursor.execute(f"""
-                    SELECT news_item_id, rank FROM rank_history
-                    WHERE news_item_id IN ({placeholders})
-                    ORDER BY news_item_id, crawl_time
+                    SELECT rh.news_item_id, rh.rank, rh.crawl_time
+                    FROM rank_history rh
+                    JOIN news_items ni ON rh.news_item_id = ni.id
+                    WHERE rh.news_item_id IN ({placeholders})
+                      AND NOT (rh.rank = 0 AND rh.crawl_time > ni.last_crawl_time)
+                    ORDER BY rh.news_item_id, rh.crawl_time
                 """, news_ids)
                 for rh_row in cursor.fetchall():
-                    news_id, rank = rh_row[0], rh_row[1]
+                    news_id, rank, crawl_time = rh_row[0], rh_row[1], rh_row[2]
+
+                    # 构建 ranks 列表（去重，排除脱榜记录 rank=0）
                     if news_id not in rank_history_map:
                         rank_history_map[news_id] = []
-                    if rank not in rank_history_map[news_id]:
+                    if rank != 0 and rank not in rank_history_map[news_id]:
                         rank_history_map[news_id].append(rank)
+
+                    # 构建 rank_timeline 列表（完整时间线，包含脱榜）
+                    if news_id not in rank_timeline_map:
+                        rank_timeline_map[news_id] = []
+                    # 提取时间部分（HH:MM）
+                    time_part = crawl_time.split()[1][:5] if ' ' in crawl_time else crawl_time[:5]
+                    rank_timeline_map[news_id].append({
+                        "time": time_part,
+                        "rank": rank if rank != 0 else None  # 0 转为 None 表示脱榜
+                    })
 
             items: Dict[str, List[NewsItem]] = {}
             id_to_name: Dict[str, str] = {}
@@ -560,6 +536,7 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
 
                 # 获取排名历史，如果没有则使用当前排名
                 ranks = rank_history_map.get(news_id, [row[4]])
+                rank_timeline = rank_timeline_map.get(news_id, [])
 
                 items[platform_id].append(NewsItem(
                     title=row[1],
@@ -573,6 +550,7 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
                     first_time=row[7],  # first_crawl_time
                     last_time=row[8],   # last_crawl_time
                     count=row[9],       # crawl_count
+                    rank_timeline=rank_timeline,
                 ))
 
             # 获取失败的来源（针对最新一次抓取）
@@ -594,10 +572,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             )
 
         except Exception as e:
-            print(f"[本地存储] 获取最新数据失败: {e}")
+            print(f"[存储] 获取最新数据失败: {e}")
             return None
 
-    def detect_new_titles(self, current_data: NewsData) -> Dict[str, Dict]:
+    def _detect_new_titles_impl(self, current_data: NewsData) -> Dict[str, Dict]:
         """
         检测新增的标题
 
@@ -612,7 +590,7 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
         """
         try:
             # 获取历史数据
-            historical_data = self.get_today_all_data(current_data.date)
+            historical_data = self._get_today_all_data_impl(current_data.date)
 
             if not historical_data:
                 # 没有历史数据，所有都是新的
@@ -653,190 +631,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             return new_titles
 
         except Exception as e:
-            print(f"[本地存储] 检测新标题失败: {e}")
+            print(f"[存储] 检测新标题失败: {e}")
             return {}
-=======
-            if off_list_count > 0:
-                log_parts.append(f"脱榜 {off_list_count} 条")
-            print("，".join(log_parts))
 
-        return success
-
-    def get_today_all_data(self, date: Optional[str] = None) -> Optional[NewsData]:
-        """获取指定日期的所有新闻数据（合并后）"""
-        db_path = self._get_db_path(date)
-        if not db_path.exists():
-            return None
-        return self._get_today_all_data_impl(date)
-
-    def get_latest_crawl_data(self, date: Optional[str] = None) -> Optional[NewsData]:
-        """获取最新一次抓取的数据"""
-        db_path = self._get_db_path(date)
-        if not db_path.exists():
-            return None
-        return self._get_latest_crawl_data_impl(date)
-
-    def detect_new_titles(self, current_data: NewsData) -> Dict[str, Dict]:
-        """检测新增的标题"""
-        return self._detect_new_titles_impl(current_data)
-
-    def is_first_crawl_today(self, date: Optional[str] = None) -> bool:
-        """检查是否是当天第一次抓取"""
-        db_path = self._get_db_path(date)
-        if not db_path.exists():
-            return True
-        return self._is_first_crawl_today_impl(date)
-
-    def get_crawl_times(self, date: Optional[str] = None) -> List[str]:
-        """获取指定日期的所有抓取时间列表"""
-        db_path = self._get_db_path(date)
-        if not db_path.exists():
-            return []
-        return self._get_crawl_times_impl(date)
-
-    def has_pushed_today(self, date: Optional[str] = None) -> bool:
-        """检查指定日期是否已推送过"""
-        return self._has_pushed_today_impl(date)
-
-    def record_push(self, report_type: str, date: Optional[str] = None) -> bool:
-        """记录推送"""
-        success = self._record_push_impl(report_type, date)
-        if success:
-            now_str = self._get_configured_time().strftime("%Y-%m-%d %H:%M:%S")
-            print(f"[本地存储] 推送记录已保存: {report_type} at {now_str}")
-        return success
-
-    # ========================================
-    # RSS 数据存储方法
-    # ========================================
-
-    def save_rss_data(self, data: RSSData) -> bool:
-        """保存 RSS 数据到 SQLite"""
-        success, new_count, updated_count = self._save_rss_data_impl(data, "[本地存储]")
-
-        if success:
-            # 输出统计日志
-            log_parts = [f"[本地存储] RSS 处理完成：新增 {new_count} 条"]
-            if updated_count > 0:
-                log_parts.append(f"更新 {updated_count} 条")
-            print("，".join(log_parts))
-
-        return success
-
-    def get_rss_data(self, date: Optional[str] = None) -> Optional[RSSData]:
-        """获取指定日期的所有 RSS 数据"""
-        return self._get_rss_data_impl(date)
-
-    def detect_new_rss_items(self, current_data: RSSData) -> Dict[str, List[RSSItem]]:
-        """检测新增的 RSS 条目"""
-        return self._detect_new_rss_items_impl(current_data)
-
-    def get_latest_rss_data(self, date: Optional[str] = None) -> Optional[RSSData]:
-        """获取最新一次抓取的 RSS 数据"""
-        db_path = self._get_db_path(date, db_type="rss")
-        if not db_path.exists():
-            return None
-        return self._get_latest_rss_data_impl(date)
-
-    # ========================================
-    # 本地特有功能：TXT/HTML 快照
-    # ========================================
->>>>>>> upstream/master
-
-    def save_txt_snapshot(self, data: NewsData) -> Optional[str]:
-        """
-        保存 TXT 快照
-
-        新结构：output/txt/{date}/{time}.txt
-
-        Args:
-            data: 新闻数据
-
-        Returns:
-            保存的文件路径
-        """
-        if not self.enable_txt:
-            return None
-
-        try:
-            date_folder = self._format_date_folder(data.date)
-            txt_dir = self.data_dir / "txt" / date_folder
-            txt_dir.mkdir(parents=True, exist_ok=True)
-
-            file_path = txt_dir / f"{data.crawl_time}.txt"
-
-            with open(file_path, "w", encoding="utf-8") as f:
-                for source_id, news_list in data.items.items():
-                    source_name = data.id_to_name.get(source_id, source_id)
-
-                    # 写入来源标题
-                    if source_name and source_name != source_id:
-                        f.write(f"{source_id} | {source_name}\n")
-                    else:
-                        f.write(f"{source_id}\n")
-
-                    # 按排名排序
-                    sorted_news = sorted(news_list, key=lambda x: x.rank)
-
-                    for item in sorted_news:
-                        line = f"{item.rank}. {item.title}"
-                        if item.url:
-                            line += f" [URL:{item.url}]"
-                        if item.mobile_url:
-                            line += f" [MOBILE:{item.mobile_url}]"
-                        f.write(line + "\n")
-
-                    f.write("\n")
-
-                # 写入失败的来源
-                if data.failed_ids:
-                    f.write("==== 以下ID请求失败 ====\n")
-                    for failed_id in data.failed_ids:
-                        f.write(f"{failed_id}\n")
-
-            print(f"[本地存储] TXT 快照已保存: {file_path}")
-            return str(file_path)
-
-        except Exception as e:
-            print(f"[本地存储] 保存 TXT 快照失败: {e}")
-            return None
-
-    def save_html_report(self, html_content: str, filename: str, is_summary: bool = False) -> Optional[str]:
-        """
-        保存 HTML 报告
-
-        新结构：output/html/{date}/{filename}
-
-        Args:
-            html_content: HTML 内容
-            filename: 文件名
-            is_summary: 是否为汇总报告
-
-        Returns:
-            保存的文件路径
-        """
-        if not self.enable_html:
-            return None
-
-        try:
-            date_folder = self._format_date_folder()
-            html_dir = self.data_dir / "html" / date_folder
-            html_dir.mkdir(parents=True, exist_ok=True)
-
-            file_path = html_dir / filename
-
-            with open(file_path, "w", encoding="utf-8") as f:
-                f.write(html_content)
-
-            print(f"[本地存储] HTML 报告已保存: {file_path}")
-            return str(file_path)
-
-        except Exception as e:
-            print(f"[本地存储] 保存 HTML 报告失败: {e}")
-            return None
-
-<<<<<<< HEAD
-    def is_first_crawl_today(self, date: Optional[str] = None) -> bool:
+    def _is_first_crawl_today_impl(self, date: Optional[str] = None) -> bool:
         """
         检查是否是当天第一次抓取
 
@@ -847,10 +645,6 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             是否是第一次抓取
         """
         try:
-            db_path = self._get_db_path(date)
-            if not db_path.exists():
-                return True
-
             conn = self._get_connection(date)
             cursor = conn.cursor()
 
@@ -865,10 +659,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             return count <= 1
 
         except Exception as e:
-            print(f"[本地存储] 检查首次抓取失败: {e}")
+            print(f"[存储] 检查首次抓取失败: {e}")
             return True
 
-    def get_crawl_times(self, date: Optional[str] = None) -> List[str]:
+    def _get_crawl_times_impl(self, date: Optional[str] = None) -> List[str]:
         """
         获取指定日期的所有抓取时间列表
 
@@ -879,10 +673,6 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             抓取时间列表（按时间排序）
         """
         try:
-            db_path = self._get_db_path(date)
-            if not db_path.exists():
-                return []
-
             conn = self._get_connection(date)
             cursor = conn.cursor()
 
@@ -895,145 +685,14 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             return [row[0] for row in rows]
 
         except Exception as e:
-            print(f"[本地存储] 获取抓取时间列表失败: {e}")
+            print(f"[存储] 获取抓取时间列表失败: {e}")
             return []
-=======
+
     # ========================================
-    # 本地特有功能：资源清理
+    # 推送记录
     # ========================================
->>>>>>> upstream/master
 
-    def cleanup(self) -> None:
-        """清理资源（关闭数据库连接）"""
-        for db_path, conn in self._db_connections.items():
-            try:
-                conn.close()
-                print(f"[本地存储] 关闭数据库连接: {db_path}")
-            except Exception as e:
-                print(f"[本地存储] 关闭连接失败 {db_path}: {e}")
-
-        self._db_connections.clear()
-
-    def cleanup_old_data(self, retention_days: int) -> int:
-        """
-        清理过期数据
-
-        新结构清理逻辑：
-        - output/news/{date}.db  -> 删除过期的 .db 文件
-        - output/rss/{date}.db   -> 删除过期的 .db 文件
-        - output/txt/{date}/     -> 删除过期的日期目录
-        - output/html/{date}/    -> 删除过期的日期目录
-
-        Args:
-            retention_days: 保留天数（0 表示不清理）
-
-        Returns:
-            删除的文件/目录数量
-        """
-        if retention_days <= 0:
-            return 0
-
-        deleted_count = 0
-        cutoff_date = self._get_configured_time() - timedelta(days=retention_days)
-
-        def parse_date_from_name(name: str) -> Optional[datetime]:
-<<<<<<< HEAD
-            """从文件名或目录名解析日期"""
-            # 移除 .db 后缀
-            name = name.replace('.db', '')
-            try:
-                # ISO 格式: YYYY-MM-DD
-=======
-            """从文件名或目录名解析日期 (ISO 格式: YYYY-MM-DD)"""
-            # 移除 .db 后缀
-            name = name.replace('.db', '')
-            try:
->>>>>>> upstream/master
-                date_match = re.match(r'(\d{4})-(\d{2})-(\d{2})', name)
-                if date_match:
-                    return datetime(
-                        int(date_match.group(1)),
-                        int(date_match.group(2)),
-                        int(date_match.group(3)),
-<<<<<<< HEAD
-                        tzinfo=pytz.timezone("Asia/Shanghai")
-                    )
-                # 旧中文格式: YYYY年MM月DD日
-                date_match = re.match(r'(\d{4})年(\d{2})月(\d{2})日', name)
-                if date_match:
-                    return datetime(
-                        int(date_match.group(1)),
-                        int(date_match.group(2)),
-                        int(date_match.group(3)),
-                        tzinfo=pytz.timezone("Asia/Shanghai")
-=======
-                        tzinfo=pytz.timezone(self.timezone)
->>>>>>> upstream/master
-                    )
-            except Exception:
-                pass
-            return None
-
-        try:
-            if not self.data_dir.exists():
-                return 0
-
-            # 清理数据库文件 (news/, rss/)
-            for db_type in ["news", "rss"]:
-                db_dir = self.data_dir / db_type
-                if not db_dir.exists():
-                    continue
-
-                for db_file in db_dir.glob("*.db"):
-                    file_date = parse_date_from_name(db_file.name)
-                    if file_date and file_date < cutoff_date:
-                        # 先关闭数据库连接
-                        db_path = str(db_file)
-                        if db_path in self._db_connections:
-                            try:
-                                self._db_connections[db_path].close()
-                                del self._db_connections[db_path]
-                            except Exception:
-                                pass
-
-                        # 删除文件
-                        try:
-                            db_file.unlink()
-                            deleted_count += 1
-                            print(f"[本地存储] 清理过期数据: {db_type}/{db_file.name}")
-                        except Exception as e:
-                            print(f"[本地存储] 删除文件失败 {db_file}: {e}")
-
-            # 清理快照目录 (txt/, html/)
-            for snapshot_type in ["txt", "html"]:
-                snapshot_dir = self.data_dir / snapshot_type
-                if not snapshot_dir.exists():
-                    continue
-
-                for date_folder in snapshot_dir.iterdir():
-                    if not date_folder.is_dir() or date_folder.name.startswith('.'):
-                        continue
-
-                    folder_date = parse_date_from_name(date_folder.name)
-                    if folder_date and folder_date < cutoff_date:
-                        try:
-                            shutil.rmtree(date_folder)
-                            deleted_count += 1
-                            print(f"[本地存储] 清理过期数据: {snapshot_type}/{date_folder.name}")
-                        except Exception as e:
-                            print(f"[本地存储] 删除目录失败 {date_folder}: {e}")
-
-            if deleted_count > 0:
-                print(f"[本地存储] 共清理 {deleted_count} 个过期文件/目录")
-
-            return deleted_count
-
-        except Exception as e:
-            print(f"[本地存储] 清理过期数据失败: {e}")
-            return deleted_count
-
-<<<<<<< HEAD
-    def has_pushed_today(self, date: Optional[str] = None) -> bool:
+    def _has_pushed_today_impl(self, date: Optional[str] = None) -> bool:
         """
         检查指定日期是否已推送过
 
@@ -1059,10 +718,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             return False
 
         except Exception as e:
-            print(f"[本地存储] 检查推送记录失败: {e}")
+            print(f"[存储] 检查推送记录失败: {e}")
             return False
 
-    def record_push(self, report_type: str, date: Optional[str] = None) -> bool:
+    def _record_push_impl(self, report_type: str, date: Optional[str] = None) -> bool:
         """
         记录推送
 
@@ -1090,27 +749,26 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             """, (target_date, now_str, report_type, now_str))
 
             conn.commit()
-
-            print(f"[本地存储] 推送记录已保存: {report_type} at {now_str}")
             return True
 
         except Exception as e:
-            print(f"[本地存储] 记录推送失败: {e}")
+            print(f"[存储] 记录推送失败: {e}")
             return False
 
     # ========================================
-    # RSS 数据存储方法
+    # RSS 数据存储
     # ========================================
 
-    def save_rss_data(self, data: RSSData) -> bool:
+    def _save_rss_data_impl(self, data: RSSData, log_prefix: str = "[存储]") -> tuple[bool, int, int]:
         """
         保存 RSS 数据到 SQLite（以 URL 为唯一标识）
 
         Args:
             data: RSS 数据
+            log_prefix: 日志前缀
 
         Returns:
-            是否保存成功
+            (success, new_count, updated_count)
         """
         try:
             conn = self._get_connection(data.date, db_type="rss")
@@ -1160,32 +818,44 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
                                       item.author, data.crawl_time, now_str, existing_id))
                                 updated_count += 1
                             else:
-                                # 不存在，插入新记录
+                                # 不存在，插入新记录（使用 ON CONFLICT 兜底处理并发/竞争场景）
                                 cursor.execute("""
                                     INSERT INTO rss_items
                                     (title, feed_id, url, published_at, summary, author,
                                      first_crawl_time, last_crawl_time, crawl_count,
                                      created_at, updated_at)
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+                                    ON CONFLICT(url, feed_id) DO UPDATE SET
+                                        title = excluded.title,
+                                        published_at = excluded.published_at,
+                                        summary = excluded.summary,
+                                        author = excluded.author,
+                                        last_crawl_time = excluded.last_crawl_time,
+                                        crawl_count = crawl_count + 1,
+                                        updated_at = excluded.updated_at
                                 """, (item.title, feed_id, item.url, item.published_at,
                                       item.summary, item.author, data.crawl_time,
                                       data.crawl_time, now_str, now_str))
                                 new_count += 1
                         else:
-                            # URL 为空，直接插入
-                            cursor.execute("""
-                                INSERT INTO rss_items
-                                (title, feed_id, url, published_at, summary, author,
-                                 first_crawl_time, last_crawl_time, crawl_count,
-                                 created_at, updated_at)
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
-                            """, (item.title, feed_id, "", item.published_at,
-                                  item.summary, item.author, data.crawl_time,
-                                  data.crawl_time, now_str, now_str))
-                            new_count += 1
+                            # URL 为空，用 try-except 处理重复
+                            try:
+                                cursor.execute("""
+                                    INSERT INTO rss_items
+                                    (title, feed_id, url, published_at, summary, author,
+                                     first_crawl_time, last_crawl_time, crawl_count,
+                                     created_at, updated_at)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)
+                                """, (item.title, feed_id, "", item.published_at,
+                                      item.summary, item.author, data.crawl_time,
+                                      data.crawl_time, now_str, now_str))
+                                new_count += 1
+                            except sqlite3.IntegrityError:
+                                # 重复的空 URL 条目，忽略
+                                pass
 
                     except sqlite3.Error as e:
-                        print(f"[本地存储] 保存 RSS 条目失败 [{item.title[:30]}...]: {e}")
+                        print(f"{log_prefix} 保存 RSS 条目失败 [{item.title[:30]}...]: {e}")
 
             total_items = new_count + updated_count
 
@@ -1227,19 +897,13 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
 
             conn.commit()
 
-            # 输出统计日志
-            log_parts = [f"[本地存储] RSS 处理完成：新增 {new_count} 条"]
-            if updated_count > 0:
-                log_parts.append(f"更新 {updated_count} 条")
-            print("，".join(log_parts))
-
-            return True
+            return True, new_count, updated_count
 
         except Exception as e:
-            print(f"[本地存储] 保存 RSS 数据失败: {e}")
-            return False
+            print(f"{log_prefix} 保存 RSS 数据失败: {e}")
+            return False, 0, 0
 
-    def get_rss_data(self, date: Optional[str] = None) -> Optional[RSSData]:
+    def _get_rss_data_impl(self, date: Optional[str] = None) -> Optional[RSSData]:
         """
         获取指定日期的所有 RSS 数据
 
@@ -1321,10 +985,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             )
 
         except Exception as e:
-            print(f"[本地存储] 读取 RSS 数据失败: {e}")
+            print(f"[存储] 读取 RSS 数据失败: {e}")
             return None
 
-    def detect_new_rss_items(self, current_data: RSSData) -> Dict[str, List[RSSItem]]:
+    def _detect_new_rss_items_impl(self, current_data: RSSData) -> Dict[str, List[RSSItem]]:
         """
         检测新增的 RSS 条目（增量模式）
 
@@ -1339,7 +1003,7 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
         """
         try:
             # 获取历史数据
-            historical_data = self.get_rss_data(current_data.date)
+            historical_data = self._get_rss_data_impl(current_data.date)
 
             if not historical_data:
                 # 没有历史数据，所有都是新的
@@ -1378,10 +1042,10 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             return new_items
 
         except Exception as e:
-            print(f"[本地存储] 检测新 RSS 条目失败: {e}")
+            print(f"[存储] 检测新 RSS 条目失败: {e}")
             return {}
 
-    def get_latest_rss_data(self, date: Optional[str] = None) -> Optional[RSSData]:
+    def _get_latest_rss_data_impl(self, date: Optional[str] = None) -> Optional[RSSData]:
         """
         获取最新一次抓取的 RSS 数据（当前榜单模式）
 
@@ -1392,10 +1056,6 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             最新抓取的 RSS 数据，如果没有数据返回 None
         """
         try:
-            db_path = self._get_db_path(date, db_type="rss")
-            if not db_path.exists():
-                return None
-
             conn = self._get_connection(date, db_type="rss")
             cursor = conn.cursor()
 
@@ -1473,11 +1133,5 @@ class LocalStorageBackend(SQLiteStorageMixin, StorageBackend):
             )
 
         except Exception as e:
-            print(f"[本地存储] 获取最新 RSS 数据失败: {e}")
+            print(f"[存储] 获取最新 RSS 数据失败: {e}")
             return None
-
-=======
->>>>>>> upstream/master
-    def __del__(self):
-        """析构函数，确保关闭连接"""
-        self.cleanup()

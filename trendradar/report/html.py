@@ -6,44 +6,83 @@ HTML 报告渲染模块
 """
 
 from datetime import datetime
+<<<<<<< HEAD
 from typing import Dict, List, Optional, Callable
 
 from trendradar.report.helpers import html_escape
 from trendradar.utils.time import convert_time_for_display
+=======
+from typing import Any, Dict, List, Optional, Callable
+
+from trendradar.report.helpers import html_escape
+from trendradar.utils.time import convert_time_for_display
+from trendradar.ai.formatter import render_ai_analysis_html_rich
+>>>>>>> upstream/master
 
 
 def render_html_content(
     report_data: Dict,
     total_titles: int,
+<<<<<<< HEAD
     is_daily_summary: bool = False,
     mode: str = "daily",
     update_info: Optional[Dict] = None,
     *,
     reverse_content_order: bool = False,
+=======
+    mode: str = "daily",
+    update_info: Optional[Dict] = None,
+    *,
+    region_order: Optional[List[str]] = None,
+>>>>>>> upstream/master
     get_time_func: Optional[Callable[[], datetime]] = None,
     rss_items: Optional[List[Dict]] = None,
     rss_new_items: Optional[List[Dict]] = None,
     display_mode: str = "keyword",
     standalone_data: Optional[Dict] = None,
+<<<<<<< HEAD
+=======
+    ai_analysis: Optional[Any] = None,
+    show_new_section: bool = True,
+>>>>>>> upstream/master
 ) -> str:
     """渲染HTML内容
 
     Args:
         report_data: 报告数据字典，包含 stats, new_titles, failed_ids, total_new_count
         total_titles: 新闻总数
+<<<<<<< HEAD
         is_daily_summary: 是否为当日汇总
         mode: 报告模式 ("daily", "current", "incremental")
         update_info: 更新信息（可选）
         reverse_content_order: 是否反转内容顺序（新增热点在前）
+=======
+        mode: 报告模式 ("daily", "current", "incremental")
+        update_info: 更新信息（可选）
+        region_order: 区域显示顺序列表
+>>>>>>> upstream/master
         get_time_func: 获取当前时间的函数（可选，默认使用 datetime.now）
         rss_items: RSS 统计条目列表（可选）
         rss_new_items: RSS 新增条目列表（可选）
         display_mode: 显示模式 ("keyword"=按关键词分组, "platform"=按平台分组)
         standalone_data: 独立展示区数据（可选），包含 platforms 和 rss_feeds
+<<<<<<< HEAD
+=======
+        ai_analysis: AI 分析结果对象（可选），AIAnalysisResult 实例
+        show_new_section: 是否显示新增热点区域
+>>>>>>> upstream/master
 
     Returns:
         渲染后的 HTML 字符串
     """
+<<<<<<< HEAD
+=======
+    # 默认区域顺序
+    default_region_order = ["hotlist", "rss", "new_items", "standalone", "ai_analysis"]
+    if region_order is None:
+        region_order = default_region_order
+
+>>>>>>> upstream/master
     html = """
     <!DOCTYPE html>
     <html>
@@ -318,10 +357,28 @@ def render_html_content(
                 color: #7c3aed;
             }
 
+<<<<<<< HEAD
             .new-section {
                 margin-top: 40px;
                 padding-top: 24px;
                 border-top: 2px solid #f0f0f0;
+=======
+            /* 通用区域分割线样式 */
+            .section-divider {
+                margin-top: 32px;
+                padding-top: 24px;
+                border-top: 2px solid #e5e7eb;
+            }
+
+            /* 热榜统计区样式 */
+            .hotlist-section {
+                /* 默认无边框，由 section-divider 动态添加 */
+            }
+
+            .new-section {
+                margin-top: 40px;
+                padding-top: 24px;
+>>>>>>> upstream/master
             }
 
             .new-section-title {
@@ -487,7 +544,10 @@ def render_html_content(
             .rss-section {
                 margin-top: 32px;
                 padding-top: 24px;
+<<<<<<< HEAD
                 border-top: 2px solid #e5e7eb;
+=======
+>>>>>>> upstream/master
             }
 
             .rss-section-header {
@@ -600,7 +660,10 @@ def render_html_content(
             .standalone-section {
                 margin-top: 32px;
                 padding-top: 24px;
+<<<<<<< HEAD
                 border-top: 2px solid #e5e7eb;
+=======
+>>>>>>> upstream/master
             }
 
             .standalone-section-header {
@@ -613,7 +676,11 @@ def render_html_content(
             .standalone-section-title {
                 font-size: 18px;
                 font-weight: 600;
+<<<<<<< HEAD
                 color: #4f46e5;
+=======
+                color: #059669;
+>>>>>>> upstream/master
             }
 
             .standalone-section-count {
@@ -649,6 +716,75 @@ def render_html_content(
                 font-size: 13px;
                 font-weight: 500;
             }
+<<<<<<< HEAD
+=======
+
+            /* AI 分析区块样式 */
+            .ai-section {
+                margin-top: 32px;
+                padding: 24px;
+                background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                border-radius: 12px;
+                border: 1px solid #bae6fd;
+            }
+
+            .ai-section-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .ai-section-title {
+                font-size: 18px;
+                font-weight: 600;
+                color: #0369a1;
+            }
+
+            .ai-section-badge {
+                background: #0ea5e9;
+                color: white;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 3px 8px;
+                border-radius: 4px;
+            }
+
+            .ai-block {
+                margin-bottom: 16px;
+                padding: 16px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            }
+
+            .ai-block:last-child {
+                margin-bottom: 0;
+            }
+
+            .ai-block-title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #0369a1;
+                margin-bottom: 8px;
+            }
+
+            .ai-block-content {
+                font-size: 14px;
+                line-height: 1.6;
+                color: #334155;
+                white-space: pre-wrap;
+            }
+
+            .ai-error {
+                padding: 16px;
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                border-radius: 8px;
+                color: #991b1b;
+                font-size: 14px;
+            }
+>>>>>>> upstream/master
         </style>
     </head>
     <body>
@@ -664,6 +800,7 @@ def render_html_content(
                         <span class="info-label">报告类型</span>
                         <span class="info-value">"""
 
+<<<<<<< HEAD
     # 处理报告类型显示
     if is_daily_summary:
         if mode == "current":
@@ -674,6 +811,15 @@ def render_html_content(
             html += "当日汇总"
     else:
         html += "实时分析"
+=======
+    # 处理报告类型显示（根据 mode 直接显示）
+    if mode == "current":
+        html += "当前榜单"
+    elif mode == "incremental":
+        html += "增量分析"
+    else:
+        html += "全天汇总"
+>>>>>>> upstream/master
 
     html += """</span>
                     </div>
@@ -837,9 +983,21 @@ def render_html_content(
             stats_html += """
                 </div>"""
 
+<<<<<<< HEAD
     # 生成新增新闻区域的HTML
     new_titles_html = ""
     if report_data["new_titles"]:
+=======
+    # 给热榜统计添加外层包装
+    if stats_html:
+        stats_html = f"""
+                <div class="hotlist-section">{stats_html}
+                </div>"""
+
+    # 生成新增新闻区域的HTML
+    new_titles_html = ""
+    if show_new_section and report_data["new_titles"]:
+>>>>>>> upstream/master
         new_titles_html += f"""
                 <div class="new-section">
                     <div class="new-section-title">本次新增热点 (共 {report_data['total_new_count']} 条)</div>"""
@@ -1062,7 +1220,11 @@ def render_html_content(
         standalone_html = f"""
                 <div class="standalone-section">
                     <div class="standalone-section-header">
+<<<<<<< HEAD
                         <div class="standalone-section-title">📋 独立展示区</div>
+=======
+                        <div class="standalone-section-title">独立展示区</div>
+>>>>>>> upstream/master
                         <div class="standalone-section-count">{total_count} 条</div>
                     </div>"""
 
@@ -1231,6 +1393,7 @@ def render_html_content(
     # 生成独立展示区 HTML
     standalone_html = render_standalone_html(standalone_data)
 
+<<<<<<< HEAD
     # 根据配置决定内容顺序（与推送逻辑一致）
     if reverse_content_order:
         # 新增在前，统计在后
@@ -1240,6 +1403,52 @@ def render_html_content(
         # 默认：统计在前，新增在后
         # 顺序：热榜统计 → RSS统计 → 热榜新增 → RSS新增 → 独立展示区
         html += stats_html + rss_stats_html + new_titles_html + rss_new_html + standalone_html
+=======
+    # 生成 AI 分析 HTML
+    ai_html = render_ai_analysis_html_rich(ai_analysis) if ai_analysis else ""
+
+    # 准备各区域内容映射
+    region_contents = {
+        "hotlist": stats_html,
+        "rss": rss_stats_html,
+        "new_items": (new_titles_html, rss_new_html),  # 元组，分别处理
+        "standalone": standalone_html,
+        "ai_analysis": ai_html,
+    }
+
+    def add_section_divider(content: str) -> str:
+        """为内容的外层 div 添加 section-divider 类"""
+        if not content or 'class="' not in content:
+            return content
+        first_class_pos = content.find('class="')
+        if first_class_pos != -1:
+            insert_pos = first_class_pos + len('class="')
+            return content[:insert_pos] + "section-divider " + content[insert_pos:]
+        return content
+
+    # 按 region_order 顺序组装内容，动态添加分割线
+    has_previous_content = False
+    for region in region_order:
+        content = region_contents.get(region, "")
+        if region == "new_items":
+            # 特殊处理 new_items 区域（包含热榜新增和 RSS 新增两部分）
+            new_html, rss_new = content
+            if new_html:
+                if has_previous_content:
+                    new_html = add_section_divider(new_html)
+                html += new_html
+                has_previous_content = True
+            if rss_new:
+                if has_previous_content:
+                    rss_new = add_section_divider(rss_new)
+                html += rss_new
+                has_previous_content = True
+        elif content:
+            if has_previous_content:
+                content = add_section_divider(content)
+            html += content
+            has_previous_content = True
+>>>>>>> upstream/master
 
     html += """
             </div>

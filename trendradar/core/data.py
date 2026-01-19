@@ -126,6 +126,10 @@ def read_all_today_titles_from_storage(
                 first_time = getattr(item, 'first_time', item.crawl_time)
                 last_time = getattr(item, 'last_time', item.crawl_time)
                 count = getattr(item, 'count', 1)
+<<<<<<< HEAD
+=======
+                rank_timeline = getattr(item, 'rank_timeline', [])
+>>>>>>> upstream/master
 
                 all_results[source_id][title] = {
                     "ranks": ranks,
@@ -140,6 +144,10 @@ def read_all_today_titles_from_storage(
                     "ranks": ranks,
                     "url": item.url or "",
                     "mobileUrl": item.mobile_url or "",
+<<<<<<< HEAD
+=======
+                    "rank_timeline": rank_timeline,
+>>>>>>> upstream/master
                 }
 
         return all_results, final_id_to_name, title_info
@@ -283,6 +291,7 @@ def detect_latest_new_titles(
         total_new = sum(len(titles) for titles in new_titles.values())
         print(f"[存储] 从存储后端检测到 {total_new} 条新增标题")
     return new_titles
+<<<<<<< HEAD
 
 
 def is_first_crawl_today(output_dir: str, date_folder: str) -> bool:
@@ -303,3 +312,5 @@ def is_first_crawl_today(output_dir: str, date_folder: str) -> bool:
 
     files = sorted([f for f in txt_dir.iterdir() if f.suffix == ".txt"])
     return len(files) <= 1
+=======
+>>>>>>> upstream/master

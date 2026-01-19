@@ -150,7 +150,11 @@ class DataService:
         # 尝试从缓存获取
         date_str = target_date.strftime("%Y-%m-%d")
         cache_key = f"news_by_date:{date_str}:{','.join(platforms or [])}:{limit}:{include_url}"
+<<<<<<< HEAD
         cached = self.cache.get(cache_key, ttl=1800)  # 30分钟缓存
+=======
+        cached = self.cache.get(cache_key, ttl=900)  # 15分钟缓存
+>>>>>>> upstream/master
         if cached:
             return cached
 
@@ -353,7 +357,11 @@ class DataService:
         """
         # 尝试从缓存获取
         cache_key = f"trending_topics:{top_n}:{mode}:{extract_mode}"
+<<<<<<< HEAD
         cached = self.cache.get(cache_key, ttl=1800)  # 30分钟缓存
+=======
+        cached = self.cache.get(cache_key, ttl=900)  # 15分钟缓存
+>>>>>>> upstream/master
         if cached:
             return cached
 
@@ -470,12 +478,15 @@ class DataService:
         Raises:
             FileParseError: 配置文件解析错误
         """
+<<<<<<< HEAD
         # 尝试从缓存获取
         cache_key = f"config:{section}"
         cached = self.cache.get(cache_key, ttl=3600)  # 1小时缓存
         if cached:
             return cached
 
+=======
+>>>>>>> upstream/master
         # 解析配置文件
         config_data = self.parser.parse_yaml_config()
         word_groups = self.parser.parse_frequency_words()
@@ -483,6 +494,7 @@ class DataService:
         # 根据section返回对应配置
         advanced = config_data.get("advanced", {})
         advanced_crawler = advanced.get("crawler", {})
+<<<<<<< HEAD
 
         if section == "all" or section == "crawler":
             crawler_config = {
@@ -491,6 +503,17 @@ class DataService:
                 "request_interval": advanced_crawler.get("request_interval", 1),
                 "retry_times": 3,
                 "platforms": [p["id"] for p in config_data.get("platforms", [])]
+=======
+        platforms_config = config_data.get("platforms", {})
+
+        if section == "all" or section == "crawler":
+            crawler_config = {
+                "enable_crawler": platforms_config.get("enabled", True),
+                "use_proxy": advanced_crawler.get("use_proxy", False),
+                "request_interval": advanced_crawler.get("request_interval", 1),
+                "retry_times": 3,
+                "platforms": [p["id"] for p in platforms_config.get("sources", [])]
+>>>>>>> upstream/master
             }
 
         if section == "all" or section == "push":
@@ -545,9 +568,12 @@ class DataService:
         else:
             result = {}
 
+<<<<<<< HEAD
         # 缓存结果
         self.cache.set(cache_key, result)
 
+=======
+>>>>>>> upstream/master
         return result
 
     def get_available_date_range(self) -> Tuple[Optional[datetime], Optional[datetime]]:
@@ -863,7 +889,11 @@ class DataService:
             RSS 源状态信息
         """
         cache_key = "rss_feeds_status"
+<<<<<<< HEAD
         cached = self.cache.get(cache_key, ttl=300)
+=======
+        cached = self.cache.get(cache_key, ttl=900)
+>>>>>>> upstream/master
         if cached:
             return cached
 
