@@ -274,11 +274,7 @@ class AIAnalyzer:
                 word = stat.get("word", "")
                 titles = stat.get("titles", [])
                 if word and titles:
-<<<<<<< HEAD
-                    lines.append(f"\n**{word}** ({len(titles)}条)")
-=======
                     news_lines.append(f"\n**{word}** ({len(titles)}条)")
->>>>>>> upstream/master
                     for t in titles:
                         if not isinstance(t, dict):
                             continue
