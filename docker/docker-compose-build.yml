@@ -15,14 +15,6 @@ services:
 
     environment:
       - TZ=Asia/Shanghai
-<<<<<<< HEAD
-      # 核心配置
-      - ENABLE_CRAWLER=${ENABLE_CRAWLER:-}
-      - ENABLE_NOTIFICATION=${ENABLE_NOTIFICATION:-}
-      - REPORT_MODE=${REPORT_MODE:-}
-      - DISPLAY_MODE=${DISPLAY_MODE:-}
-=======
->>>>>>> upstream/master
       # Web 服务器
       - ENABLE_WEBSERVER=${ENABLE_WEBSERVER:-false}
       - WEBSERVER_PORT=${WEBSERVER_PORT:-8080}
@@ -50,11 +42,7 @@ services:
       # 通用Webhook配置
       - GENERIC_WEBHOOK_URL=${GENERIC_WEBHOOK_URL:-}
       - GENERIC_WEBHOOK_TEMPLATE=${GENERIC_WEBHOOK_TEMPLATE:-}
-<<<<<<< HEAD
-      # AI 分析配置
-=======
       # AI 配置（ai_analysis 和 ai_translation 共享模型配置）
->>>>>>> upstream/master
       - AI_ANALYSIS_ENABLED=${AI_ANALYSIS_ENABLED:-false}
       - AI_API_KEY=${AI_API_KEY:-}
       - AI_PROVIDER=${AI_PROVIDER:-}

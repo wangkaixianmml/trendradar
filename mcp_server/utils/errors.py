@@ -4,9 +4,6 @@
 定义MCP Server使用的所有自定义异常类型。
 """
 
-<<<<<<< HEAD
-from typing import Optional
-=======
 from typing import Optional, List, Callable
 
 
@@ -26,7 +23,6 @@ def _load_supported_platforms() -> List[str]:
             # 降级：返回空列表
             return []
     return _get_supported_platforms()
->>>>>>> upstream/master
 
 
 class MCPError(Exception):
@@ -86,19 +82,12 @@ class PlatformNotSupportedError(MCPError):
     """平台不支持错误"""
 
     def __init__(self, platform: str):
-<<<<<<< HEAD
-        super().__init__(
-            message=f"平台 '{platform}' 不受支持",
-            code="PLATFORM_NOT_SUPPORTED",
-            suggestion="支持的平台: zhihu, weibo, douyin, bilibili, baidu, toutiao, qq, 36kr, sspai, hellogithub, thepaper"
-=======
         supported = _load_supported_platforms()
         suggestion = f"支持的平台: {', '.join(supported)}" if supported else "请检查 config/config.yaml 中的平台配置"
         super().__init__(
             message=f"平台 '{platform}' 不受支持",
             code="PLATFORM_NOT_SUPPORTED",
             suggestion=suggestion
->>>>>>> upstream/master
         )
 
 

@@ -279,14 +279,6 @@ def show_config():
         "CRON_SCHEDULE",
         "RUN_MODE",
         "IMMEDIATE_RUN",
-<<<<<<< HEAD
-        # 核心配置
-        "ENABLE_CRAWLER",
-        "ENABLE_NOTIFICATION",
-        "REPORT_MODE",
-        "DISPLAY_MODE",
-=======
->>>>>>> upstream/master
         # 通知渠道
         "FEISHU_WEBHOOK_URL",
         "DINGTALK_WEBHOOK_URL",

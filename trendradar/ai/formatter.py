@@ -6,10 +6,7 @@ AI 分析结果格式化模块
 """
 
 import html as html_lib
-<<<<<<< HEAD
-=======
 import re
->>>>>>> upstream/master
 from .analyzer import AIAnalysisResult
 
 
@@ -18,8 +15,6 @@ def _escape_html(text: str) -> str:
     return html_lib.escape(text) if text else ""
 
 
-<<<<<<< HEAD
-=======
 def _format_list_content(text: str) -> str:
     """
     格式化列表内容，确保序号前有换行
@@ -60,7 +55,6 @@ def _format_list_content(text: str) -> str:
     return result
 
 
->>>>>>> upstream/master
 def render_ai_analysis_markdown(result: AIAnalysisResult) -> str:
     """渲染为通用 Markdown 格式（Telegram、企业微信、ntfy、Bark、Slack）"""
     if not result.success:
@@ -68,28 +62,6 @@ def render_ai_analysis_markdown(result: AIAnalysisResult) -> str:
 
     lines = ["**✨ AI 热点分析**", ""]
 
-<<<<<<< HEAD
-    if result.summary:
-        lines.extend(["**趋势概述**", result.summary, ""])
-
-    if result.keyword_analysis:
-        lines.extend(["**热度走势**", result.keyword_analysis, ""])
-
-    if result.sentiment:
-        lines.extend(["**情感倾向**", result.sentiment, ""])
-
-    if result.cross_platform:
-        lines.extend(["**跨平台关联**", result.cross_platform, ""])
-
-    if result.impact:
-        lines.extend(["**潜在影响**", result.impact, ""])
-
-    if result.signals:
-        lines.extend(["**值得关注**", result.signals, ""])
-
-    if result.conclusion:
-        lines.extend(["**总结建议**", result.conclusion])
-=======
     if result.core_trends:
         lines.extend(["**核心热点态势**", _format_list_content(result.core_trends), ""])
 
@@ -104,7 +76,6 @@ def render_ai_analysis_markdown(result: AIAnalysisResult) -> str:
 
     if result.outlook_strategy:
         lines.extend(["**研判策略建议**", _format_list_content(result.outlook_strategy)])
->>>>>>> upstream/master
 
     return "\n".join(lines)
 
@@ -116,28 +87,6 @@ def render_ai_analysis_feishu(result: AIAnalysisResult) -> str:
 
     lines = ["**✨ AI 热点分析**", ""]
 
-<<<<<<< HEAD
-    if result.summary:
-        lines.extend(["**趋势概述**", result.summary, ""])
-
-    if result.keyword_analysis:
-        lines.extend(["**热度走势**", result.keyword_analysis, ""])
-
-    if result.sentiment:
-        lines.extend(["**情感倾向**", result.sentiment, ""])
-
-    if result.cross_platform:
-        lines.extend(["**跨平台关联**", result.cross_platform, ""])
-
-    if result.impact:
-        lines.extend(["**潜在影响**", result.impact, ""])
-
-    if result.signals:
-        lines.extend(["**值得关注**", result.signals, ""])
-
-    if result.conclusion:
-        lines.extend(["**总结建议**", result.conclusion])
-=======
     if result.core_trends:
         lines.extend(["**核心热点态势**", _format_list_content(result.core_trends), ""])
 
@@ -152,7 +101,6 @@ def render_ai_analysis_feishu(result: AIAnalysisResult) -> str:
 
     if result.outlook_strategy:
         lines.extend(["**研判策略建议**", _format_list_content(result.outlook_strategy)])
->>>>>>> upstream/master
 
     return "\n".join(lines)
 
@@ -164,28 +112,6 @@ def render_ai_analysis_dingtalk(result: AIAnalysisResult) -> str:
 
     lines = ["### ✨ AI 热点分析", ""]
 
-<<<<<<< HEAD
-    if result.summary:
-        lines.extend(["#### 趋势概述", result.summary, ""])
-
-    if result.keyword_analysis:
-        lines.extend(["#### 热度走势", result.keyword_analysis, ""])
-
-    if result.sentiment:
-        lines.extend(["#### 情感倾向", result.sentiment, ""])
-
-    if result.cross_platform:
-        lines.extend(["#### 跨平台关联", result.cross_platform, ""])
-
-    if result.impact:
-        lines.extend(["#### 潜在影响", result.impact, ""])
-
-    if result.signals:
-        lines.extend(["#### 值得关注", result.signals, ""])
-
-    if result.conclusion:
-        lines.extend(["#### 总结建议", result.conclusion])
-=======
     if result.core_trends:
         lines.extend(["#### 核心热点态势", _format_list_content(result.core_trends), ""])
 
@@ -200,7 +126,6 @@ def render_ai_analysis_dingtalk(result: AIAnalysisResult) -> str:
 
     if result.outlook_strategy:
         lines.extend(["#### 研判策略建议", _format_list_content(result.outlook_strategy)])
->>>>>>> upstream/master
 
     return "\n".join(lines)
 
@@ -212,45 +137,6 @@ def render_ai_analysis_html(result: AIAnalysisResult) -> str:
 
     html_parts = ['<div class="ai-analysis">', '<h3>✨ AI 热点分析</h3>']
 
-<<<<<<< HEAD
-    if result.summary:
-        html_parts.extend([
-            '<div class="ai-section">',
-            '<h4>趋势概述</h4>',
-            f'<p>{_escape_html(result.summary)}</p>',
-            '</div>'
-        ])
-
-    if result.keyword_analysis:
-        html_parts.extend([
-            '<div class="ai-section">',
-            '<h4>热度走势</h4>',
-            f'<p>{_escape_html(result.keyword_analysis)}</p>',
-            '</div>'
-        ])
-
-    if result.sentiment:
-        html_parts.extend([
-            '<div class="ai-section">',
-            '<h4>情感倾向</h4>',
-            f'<p>{_escape_html(result.sentiment)}</p>',
-            '</div>'
-        ])
-
-    if result.cross_platform:
-        html_parts.extend([
-            '<div class="ai-section">',
-            '<h4>跨平台关联</h4>',
-            f'<p>{_escape_html(result.cross_platform)}</p>',
-            '</div>'
-        ])
-
-    if result.impact:
-        html_parts.extend([
-            '<div class="ai-section">',
-            '<h4>潜在影响</h4>',
-            f'<p>{_escape_html(result.impact)}</p>',
-=======
     if result.core_trends:
         content = _format_list_content(result.core_trends)
         content_html = _escape_html(content).replace("\n", "<br>")
@@ -268,25 +154,10 @@ def render_ai_analysis_html(result: AIAnalysisResult) -> str:
             '<div class="ai-section">',
             '<h4>舆论风向争议</h4>',
             f'<div class="ai-content">{content_html}</div>',
->>>>>>> upstream/master
             '</div>'
         ])
 
     if result.signals:
-<<<<<<< HEAD
-        html_parts.extend([
-            '<div class="ai-section">',
-            '<h4>值得关注</h4>',
-            f'<p>{_escape_html(result.signals)}</p>',
-            '</div>'
-        ])
-
-    if result.conclusion:
-        html_parts.extend([
-            '<div class="ai-section ai-conclusion">',
-            '<h4>总结建议</h4>',
-            f'<p>{_escape_html(result.conclusion)}</p>',
-=======
         content = _format_list_content(result.signals)
         content_html = _escape_html(content).replace("\n", "<br>")
         html_parts.extend([
@@ -313,7 +184,6 @@ def render_ai_analysis_html(result: AIAnalysisResult) -> str:
             '<div class="ai-section ai-conclusion">',
             '<h4>研判策略建议</h4>',
             f'<div class="ai-content">{content_html}</div>',
->>>>>>> upstream/master
             '</div>'
         ])
 
@@ -326,30 +196,6 @@ def render_ai_analysis_plain(result: AIAnalysisResult) -> str:
     if not result.success:
         return f"AI 分析失败: {result.error}"
 
-<<<<<<< HEAD
-    lines = ["【AI 热点分析】", ""]
-
-    if result.summary:
-        lines.extend(["[趋势概述]", result.summary, ""])
-
-    if result.keyword_analysis:
-        lines.extend(["[热度走势]", result.keyword_analysis, ""])
-
-    if result.sentiment:
-        lines.extend(["[情感倾向]", result.sentiment, ""])
-
-    if result.cross_platform:
-        lines.extend(["[跨平台关联]", result.cross_platform, ""])
-
-    if result.impact:
-        lines.extend(["[潜在影响]", result.impact, ""])
-
-    if result.signals:
-        lines.extend(["[值得关注]", result.signals, ""])
-
-    if result.conclusion:
-        lines.extend(["[总结建议]", result.conclusion])
-=======
     lines = ["【✨ AI 热点分析】", ""]
 
     if result.core_trends:
@@ -366,7 +212,6 @@ def render_ai_analysis_plain(result: AIAnalysisResult) -> str:
 
     if result.outlook_strategy:
         lines.extend(["[研判策略建议]", _format_list_content(result.outlook_strategy)])
->>>>>>> upstream/master
 
     return "\n".join(lines)
 
@@ -378,18 +223,12 @@ def get_ai_analysis_renderer(channel: str):
         "dingtalk": render_ai_analysis_dingtalk,
         "wework": render_ai_analysis_markdown,
         "telegram": render_ai_analysis_markdown,
-<<<<<<< HEAD
-        "email": render_ai_analysis_html,
-=======
         "email": render_ai_analysis_html_rich,  # 邮件使用丰富样式，配合 HTML 报告的 CSS
->>>>>>> upstream/master
         "ntfy": render_ai_analysis_markdown,
         "bark": render_ai_analysis_plain,
         "slack": render_ai_analysis_markdown,
     }
     return renderers.get(channel, render_ai_analysis_markdown)
-<<<<<<< HEAD
-=======
 
 
 def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
@@ -460,4 +299,3 @@ def render_ai_analysis_html_rich(result: AIAnalysisResult) -> str:
     ai_html += '''
                 </div>'''
     return ai_html
->>>>>>> upstream/master

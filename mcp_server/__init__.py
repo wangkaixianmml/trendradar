@@ -5,8 +5,4 @@ TrendRadar MCP Server
 
 """
 
-<<<<<<< HEAD
-__version__ = "3.1.5"
-=======
 __version__ = "3.1.7"
->>>>>>> upstream/master

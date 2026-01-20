@@ -6,11 +6,7 @@
 
 # TrendRadar MCP Tool Usage Q&A
 
-<<<<<<< HEAD
-> AI Query Guide - How to Use News Trend Analysis Tools Through Natural Conversation (v3.1.5)
-=======
 > AI Query Guide - How to Use News Trend Analysis Tools Through Natural Conversation (v3.1.6)
->>>>>>> upstream/master
 
 ---
 

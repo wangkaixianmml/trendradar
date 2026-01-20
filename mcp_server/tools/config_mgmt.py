@@ -4,19 +4,13 @@
 实现配置查询和管理功能。
 """
 
-<<<<<<< HEAD
-from typing import Dict, Optional
-=======
 from typing import Dict, Optional, Any, TypedDict
->>>>>>> upstream/master
 
 from ..services.data_service import DataService
 from ..utils.validators import validate_config_section
 from ..utils.errors import MCPError
 
 
-<<<<<<< HEAD
-=======
 class ErrorInfo(TypedDict, total=False):
     """错误信息结构"""
     code: str
@@ -32,7 +26,6 @@ class ConfigResult(TypedDict):
     error: Optional[ErrorInfo]
 
 
->>>>>>> upstream/master
 class ConfigManagementTools:
     """配置管理工具类"""
 
@@ -45,11 +38,7 @@ class ConfigManagementTools:
         """
         self.data_service = DataService(project_root)
 
-<<<<<<< HEAD
-    def get_current_config(self, section: Optional[str] = None) -> Dict:
-=======
     def get_current_config(self, section: Optional[str] = None) -> ConfigResult:
->>>>>>> upstream/master
         """
         获取当前系统配置
 
@@ -71,27 +60,6 @@ class ConfigManagementTools:
             # 获取配置
             config = self.data_service.get_current_config(section=section)
 
-<<<<<<< HEAD
-            return {
-                "config": config,
-                "section": section,
-                "success": True
-            }
-
-        except MCPError as e:
-            return {
-                "success": False,
-                "error": e.to_dict()
-            }
-        except Exception as e:
-            return {
-                "success": False,
-                "error": {
-                    "code": "INTERNAL_ERROR",
-                    "message": str(e)
-                }
-            }
-=======
             return ConfigResult(
                 success=True,
                 config=config,
@@ -113,4 +81,3 @@ class ConfigManagementTools:
                 section=None,
                 error={"code": "INTERNAL_ERROR", "message": str(e), "suggestion": "请查看服务日志获取详细信息"}
             )
->>>>>>> upstream/master

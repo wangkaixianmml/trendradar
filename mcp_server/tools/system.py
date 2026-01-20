@@ -113,14 +113,6 @@ class SystemManagementTools:
             with open(config_path, "r", encoding="utf-8") as f:
                 config_data = yaml.safe_load(f)
 
-<<<<<<< HEAD
-            # 获取平台配置
-            all_platforms = config_data.get("platforms", [])
-            if not all_platforms:
-                raise CrawlTaskError(
-                    "配置文件中没有平台配置",
-                    suggestion="请检查 config/config.yaml 中的 platforms 配置"
-=======
             # 获取平台配置（嵌套结构：{enabled: bool, sources: [...]})
             platforms_config = config_data.get("platforms", {})
             if not platforms_config.get("enabled", True):
@@ -133,7 +125,6 @@ class SystemManagementTools:
                 raise CrawlTaskError(
                     "配置文件中没有平台配置",
                     suggestion="请检查 config/config.yaml 中的 platforms.sources 配置"
->>>>>>> upstream/master
                 )
 
             # 过滤平台

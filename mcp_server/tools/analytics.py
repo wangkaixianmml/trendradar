@@ -4,23 +4,17 @@
 提供热度趋势分析、平台对比、关键词共现、情感分析等高级分析功能。
 """
 
-<<<<<<< HEAD
-=======
 import os
->>>>>>> upstream/master
 import re
 from collections import Counter, defaultdict
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Union
 from difflib import SequenceMatcher
 
-<<<<<<< HEAD
-=======
 import yaml
 
 from trendradar.core.analyzer import calculate_news_weight as _calculate_news_weight
 
->>>>>>> upstream/master
 from ..services.data_service import DataService
 from ..utils.validators import (
     validate_platforms,
@@ -33,8 +27,6 @@ from ..utils.validators import (
 from ..utils.errors import MCPError, InvalidParameterError, DataNotFoundError
 
 
-<<<<<<< HEAD
-=======
 def _get_weight_config() -> Dict:
     """
     从 config.yaml 读取权重配置
@@ -66,19 +58,12 @@ def _get_weight_config() -> Dict:
         return default_config
 
 
->>>>>>> upstream/master
 def calculate_news_weight(news_data: Dict, rank_threshold: int = 5) -> float:
     """
     计算新闻权重（用于排序）
 
-<<<<<<< HEAD
-    - 排名权重 (60%)：新闻在榜单中的排名
-    - 频次权重 (30%)：新闻出现的次数
-    - 热度权重 (10%)：高排名出现的比例
-=======
     复用 trendradar.core.analyzer.calculate_news_weight 实现，
     权重配置从 config.yaml 的 advanced.weight 读取。
->>>>>>> upstream/master
 
     Args:
         news_data: 新闻数据字典，包含 ranks 和 count 字段
@@ -87,45 +72,7 @@ def calculate_news_weight(news_data: Dict, rank_threshold: int = 5) -> float:
     Returns:
         权重分数（0-100之间的浮点数）
     """
-<<<<<<< HEAD
-    ranks = news_data.get("ranks", [])
-    if not ranks:
-        return 0.0
-
-    count = news_data.get("count", len(ranks))
-
-    # 权重配置（与 config.yaml 保持一致）
-    RANK_WEIGHT = 0.6
-    FREQUENCY_WEIGHT = 0.3
-    HOTNESS_WEIGHT = 0.1
-
-    # 1. 排名权重：Σ(11 - min(rank, 10)) / 出现次数
-    rank_scores = []
-    for rank in ranks:
-        score = 11 - min(rank, 10)
-        rank_scores.append(score)
-
-    rank_weight = sum(rank_scores) / len(ranks) if ranks else 0
-
-    # 2. 频次权重：min(出现次数, 10) × 10
-    frequency_weight = min(count, 10) * 10
-
-    # 3. 热度加成：高排名次数 / 总出现次数 × 100
-    high_rank_count = sum(1 for rank in ranks if rank <= rank_threshold)
-    hotness_ratio = high_rank_count / len(ranks) if ranks else 0
-    hotness_weight = hotness_ratio * 100
-
-    # 综合权重
-    total_weight = (
-        rank_weight * RANK_WEIGHT
-        + frequency_weight * FREQUENCY_WEIGHT
-        + hotness_weight * HOTNESS_WEIGHT
-    )
-
-    return total_weight
-=======
     return _calculate_news_weight(news_data, rank_threshold, _get_weight_config())
->>>>>>> upstream/master
 
 
 class AnalyticsTools:
@@ -2212,11 +2159,8 @@ class AnalyticsTools:
         """
         对新闻列表进行相似度聚合
 
-<<<<<<< HEAD
-=======
         使用双层过滤策略：先用 Jaccard 快速粗筛，再用 SequenceMatcher 精确计算
 
->>>>>>> upstream/master
         Args:
             news_list: 新闻列表
             threshold: 相似度阈值
@@ -2228,19 +2172,6 @@ class AnalyticsTools:
         if not news_list:
             return []
 
-<<<<<<< HEAD
-        # 按权重排序，优先保留高权重新闻作为代表
-        sorted_news = sorted(news_list, key=lambda x: x.get("weight", 0), reverse=True)
-
-        aggregated = []
-        used_indices = set()
-
-        for i, news in enumerate(sorted_news):
-            if i in used_indices:
-                continue
-
-            # 创建聚合组
-=======
         # 预计算字符集合用于快速过滤
         prepared_news = []
         for news in news_list:
@@ -2266,7 +2197,6 @@ class AnalyticsTools:
             base_set = item["char_set"]
             base_len = item["set_len"]
 
->>>>>>> upstream/master
             group = {
                 "representative_title": news["title"],
                 "platforms": [news["platform_name"]],
@@ -2292,15 +2222,6 @@ class AnalyticsTools:
             used_indices.add(i)
 
             # 查找相似新闻
-<<<<<<< HEAD
-            for j, other_news in enumerate(sorted_news):
-                if j in used_indices:
-                    continue
-
-                similarity = self._calculate_similarity(news["title"], other_news["title"])
-
-                if similarity >= threshold:
-=======
             for j in range(i + 1, len(sorted_items)):
                 if j in used_indices:
                     continue
@@ -2330,7 +2251,6 @@ class AnalyticsTools:
                 real_similarity = self._calculate_similarity(news["title"], other_news["title"])
 
                 if real_similarity >= threshold:
->>>>>>> upstream/master
                     # 合并到当前组
                     if other_news["platform_name"] not in group["platforms"]:
                         group["platforms"].append(other_news["platform_name"])

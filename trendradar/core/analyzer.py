@@ -290,10 +290,7 @@ def count_word_frequency(
                 ranks = source_ranks if source_ranks else []
                 url = source_url
                 mobile_url = source_mobile_url
-<<<<<<< HEAD
-=======
                 rank_timeline = []
->>>>>>> upstream/master
 
                 # 对于 current 模式，从历史统计信息中获取完整数据
                 if (
@@ -310,10 +307,7 @@ def count_word_frequency(
                         ranks = info["ranks"]
                     url = info.get("url", source_url)
                     mobile_url = info.get("mobileUrl", source_mobile_url)
-<<<<<<< HEAD
-=======
                     rank_timeline = info.get("rank_timeline", [])
->>>>>>> upstream/master
                 elif (
                     title_info
                     and source_id in title_info
@@ -327,10 +321,7 @@ def count_word_frequency(
                         ranks = info["ranks"]
                     url = info.get("url", source_url)
                     mobile_url = info.get("mobileUrl", source_mobile_url)
-<<<<<<< HEAD
-=======
                     rank_timeline = info.get("rank_timeline", [])
->>>>>>> upstream/master
 
                 if not ranks:
                     ranks = [99]
@@ -362,10 +353,7 @@ def count_word_frequency(
                         "url": url,
                         "mobileUrl": mobile_url,
                         "is_new": is_new,
-<<<<<<< HEAD
-=======
                         "rank_timeline": rank_timeline,
->>>>>>> upstream/master
                     }
                 )
 

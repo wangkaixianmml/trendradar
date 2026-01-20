@@ -8,10 +8,6 @@ body:
   - type: markdown
     attributes:
       value: |
-<<<<<<< HEAD
-        **简单的描述 + 关键截图** 是最有效的沟通方式。
-
-=======
         ### ⚠️ 提交前必读
         **请确保你正在使用 TrendRadar 的最新版本。**
         很多问题在最新代码中可能已经修复。如果你使用的是旧版本，我将无法处理，请先更新后再试。
@@ -36,7 +32,6 @@ body:
     validations:
       required: false
 
->>>>>>> upstream/master
   - type: dropdown
     id: bug-category
     attributes:

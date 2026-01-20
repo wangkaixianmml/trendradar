@@ -7,11 +7,7 @@
 
 from datetime import datetime
 from pathlib import Path
-<<<<<<< HEAD
-from typing import Any, Callable, Dict, List, Optional, Tuple
-=======
 from typing import Any, Dict, List, Optional, Tuple
->>>>>>> upstream/master
 
 from trendradar.utils.time import (
     get_configured_time,
@@ -26,10 +22,6 @@ from trendradar.core import (
     save_titles_to_file,
     read_all_today_titles,
     detect_latest_new_titles,
-<<<<<<< HEAD
-    is_first_crawl_today,
-=======
->>>>>>> upstream/master
     count_word_frequency,
 )
 from trendradar.report import (
@@ -45,10 +37,7 @@ from trendradar.notification import (
     NotificationDispatcher,
     PushRecordManager,
 )
-<<<<<<< HEAD
-=======
 from trendradar.ai import AITranslator
->>>>>>> upstream/master
 from trendradar.storage import get_storage_manager
 
 
@@ -131,8 +120,6 @@ class AppContext:
         """获取显示模式 (keyword | platform)"""
         return self.config.get("DISPLAY_MODE", "keyword")
 
-<<<<<<< HEAD
-=======
     @property
     def show_new_section(self) -> bool:
         """是否显示新增热点区域"""
@@ -144,7 +131,6 @@ class AppContext:
         default_order = ["hotlist", "rss", "new_items", "standalone", "ai_analysis"]
         return self.config.get("DISPLAY", {}).get("REGION_ORDER", default_order)
 
->>>>>>> upstream/master
     # === 时间操作 ===
 
     def get_time(self) -> datetime:
@@ -199,13 +185,8 @@ class AppContext:
         return self._storage_manager
 
     def get_output_path(self, subfolder: str, filename: str) -> str:
-<<<<<<< HEAD
-        """获取输出路径"""
-        output_dir = Path("output") / self.format_date() / subfolder
-=======
         """获取输出路径（扁平化结构：output/类型/日期/文件名）"""
         output_dir = Path("output") / subfolder / self.format_date()
->>>>>>> upstream/master
         output_dir.mkdir(parents=True, exist_ok=True)
         return str(output_dir / filename)
 
@@ -303,10 +284,7 @@ class AppContext:
             rank_threshold=self.rank_threshold,
             matches_word_groups_func=self.matches_word_groups,
             load_frequency_words_func=self.load_frequency_words,
-<<<<<<< HEAD
-=======
             show_new_section=self.show_new_section,
->>>>>>> upstream/master
         )
 
     def generate_html(
@@ -317,18 +295,11 @@ class AppContext:
         new_titles: Optional[Dict] = None,
         id_to_name: Optional[Dict] = None,
         mode: str = "daily",
-<<<<<<< HEAD
-        is_daily_summary: bool = False,
-        update_info: Optional[Dict] = None,
-        rss_items: Optional[List[Dict]] = None,
-        rss_new_items: Optional[List[Dict]] = None,
-=======
         update_info: Optional[Dict] = None,
         rss_items: Optional[List[Dict]] = None,
         rss_new_items: Optional[List[Dict]] = None,
         ai_analysis: Optional[Any] = None,
         standalone_data: Optional[Dict] = None,
->>>>>>> upstream/master
     ) -> str:
         """生成HTML报告"""
         return generate_html_report(
@@ -338,69 +309,41 @@ class AppContext:
             new_titles=new_titles,
             id_to_name=id_to_name,
             mode=mode,
-<<<<<<< HEAD
-            is_daily_summary=is_daily_summary,
-=======
->>>>>>> upstream/master
             update_info=update_info,
             rank_threshold=self.rank_threshold,
             output_dir="output",
             date_folder=self.format_date(),
             time_filename=self.format_time(),
-<<<<<<< HEAD
-            render_html_func=lambda *args, **kwargs: self.render_html(*args, rss_items=rss_items, rss_new_items=rss_new_items, **kwargs),
-            matches_word_groups_func=self.matches_word_groups,
-            load_frequency_words_func=self.load_frequency_words,
-            enable_index_copy=True,
-=======
             render_html_func=lambda *args, **kwargs: self.render_html(*args, rss_items=rss_items, rss_new_items=rss_new_items, ai_analysis=ai_analysis, standalone_data=standalone_data, **kwargs),
             matches_word_groups_func=self.matches_word_groups,
             load_frequency_words_func=self.load_frequency_words,
->>>>>>> upstream/master
         )
 
     def render_html(
         self,
         report_data: Dict,
         total_titles: int,
-<<<<<<< HEAD
-        is_daily_summary: bool = False,
-=======
->>>>>>> upstream/master
         mode: str = "daily",
         update_info: Optional[Dict] = None,
         rss_items: Optional[List[Dict]] = None,
         rss_new_items: Optional[List[Dict]] = None,
-<<<<<<< HEAD
-=======
         ai_analysis: Optional[Any] = None,
         standalone_data: Optional[Dict] = None,
->>>>>>> upstream/master
     ) -> str:
         """渲染HTML内容"""
         return render_html_content(
             report_data=report_data,
             total_titles=total_titles,
-<<<<<<< HEAD
-            is_daily_summary=is_daily_summary,
-            mode=mode,
-            update_info=update_info,
-            reverse_content_order=self.config.get("REVERSE_CONTENT_ORDER", False),
-=======
             mode=mode,
             update_info=update_info,
             region_order=self.region_order,
->>>>>>> upstream/master
             get_time_func=self.get_time,
             rss_items=rss_items,
             rss_new_items=rss_new_items,
             display_mode=self.display_mode,
-<<<<<<< HEAD
-=======
             ai_analysis=ai_analysis,
             show_new_section=self.show_new_section,
             standalone_data=standalone_data,
->>>>>>> upstream/master
         )
 
     # === 通知内容渲染 ===
@@ -417,14 +360,9 @@ class AppContext:
             update_info=update_info,
             mode=mode,
             separator=self.config.get("FEISHU_MESSAGE_SEPARATOR", "---"),
-<<<<<<< HEAD
-            reverse_content_order=self.config.get("REVERSE_CONTENT_ORDER", False),
-            get_time_func=self.get_time,
-=======
             region_order=self.region_order,
             get_time_func=self.get_time,
             show_new_section=self.show_new_section,
->>>>>>> upstream/master
         )
 
     def render_dingtalk(
@@ -438,14 +376,9 @@ class AppContext:
             report_data=report_data,
             update_info=update_info,
             mode=mode,
-<<<<<<< HEAD
-            reverse_content_order=self.config.get("REVERSE_CONTENT_ORDER", False),
-            get_time_func=self.get_time,
-=======
             region_order=self.region_order,
             get_time_func=self.get_time,
             show_new_section=self.show_new_section,
->>>>>>> upstream/master
         )
 
     def split_content(
@@ -492,11 +425,7 @@ class AppContext:
                 "default": self.config.get("MESSAGE_BATCH_SIZE", 4000),
             },
             feishu_separator=self.config.get("FEISHU_MESSAGE_SEPARATOR", "---"),
-<<<<<<< HEAD
-            reverse_content_order=self.config.get("REVERSE_CONTENT_ORDER", False),
-=======
             region_order=self.region_order,
->>>>>>> upstream/master
             get_time_func=self.get_time,
             rss_items=rss_items,
             rss_new_items=rss_new_items,
@@ -507,18 +436,13 @@ class AppContext:
             rank_threshold=self.rank_threshold,
             ai_stats=ai_stats,
             report_type=report_type,
-<<<<<<< HEAD
-=======
             show_new_section=self.show_new_section,
->>>>>>> upstream/master
         )
 
     # === 通知发送 ===
 
     def create_notification_dispatcher(self) -> NotificationDispatcher:
         """创建通知调度器"""
-<<<<<<< HEAD
-=======
         # 创建翻译器（如果启用）
         translator = None
         trans_config = self.config.get("AI_TRANSLATION", {})
@@ -526,15 +450,11 @@ class AppContext:
             ai_config = self.config.get("AI", {})
             translator = AITranslator(trans_config, ai_config)
 
->>>>>>> upstream/master
         return NotificationDispatcher(
             config=self.config,
             get_time_func=self.get_time,
             split_content_func=self.split_content,
-<<<<<<< HEAD
-=======
             translator=translator,
->>>>>>> upstream/master
         )
 
     def create_push_manager(self) -> PushRecordManager:

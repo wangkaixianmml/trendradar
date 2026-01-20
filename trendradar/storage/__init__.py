@@ -12,18 +12,12 @@ from trendradar.storage.base import (
     StorageBackend,
     NewsItem,
     NewsData,
-<<<<<<< HEAD
-    convert_crawl_results_to_news_data,
-    convert_news_data_to_results,
-)
-=======
     RSSItem,
     RSSData,
     convert_crawl_results_to_news_data,
     convert_news_data_to_results,
 )
 from trendradar.storage.sqlite_mixin import SQLiteStorageMixin
->>>>>>> upstream/master
 from trendradar.storage.local import LocalStorageBackend
 from trendradar.storage.manager import StorageManager, get_storage_manager
 
@@ -40,13 +34,10 @@ __all__ = [
     "StorageBackend",
     "NewsItem",
     "NewsData",
-<<<<<<< HEAD
-=======
     "RSSItem",
     "RSSData",
     # Mixin
     "SQLiteStorageMixin",
->>>>>>> upstream/master
     # 转换函数
     "convert_crawl_results_to_news_data",
     "convert_news_data_to_results",
